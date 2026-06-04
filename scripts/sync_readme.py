@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
 """
-自动同步 Skills 到 README.md
+自动同步 Skills 到 README.md 和 README.en.md
 
 功能：
 1. 扫描所有 skill 目录（包含 SKILL.md 的目录）
 2. 读取每个 SKILL.md 的 frontmatter 元信息
-3. 自动更新 README.md 中的：
+3. 自动更新 README.md / README.en.md 中的：
    - Skills 徽章数量
    - Skills 表格
    - Skills 详细区块（自动生成）
@@ -181,8 +181,11 @@ def get_skill_info(skill_dir: Path) -> Optional[dict]:
     # 从 frontmatter 获取基本信息
     name = frontmatter.get('name', skill_dir.name)
     description = frontmatter.get('description', '')
+    description_en = frontmatter.get('description_en', '')
     emoji = frontmatter.get('emoji', '📦')
     platforms = frontmatter.get('platforms', 'Claude Code · Codex · OpenCode · OpenClaw')
+    overview = frontmatter.get('overview', '') or sections.get('overview', '')
+    overview_en = frontmatter.get('overview_en', '')
 
     # 尝试从内容中提取一句话描述（如果 frontmatter 没有提供）
     if not description:
@@ -197,10 +200,12 @@ def get_skill_info(skill_dir: Path) -> Optional[dict]:
         'name': name,
         'dir_name': skill_dir.name,
         'description': description,
+        'description_en': description_en,
         'emoji': emoji,
         'platforms': platforms,
         'skill_md_path': f"./{skill_dir.name}/SKILL.md",
-        'overview': sections.get('overview', ''),
+        'overview': overview,
+        'overview_en': overview_en,
         'steps': sections.get('steps', []),
         'trigger': sections.get('trigger', '')
     }
@@ -249,6 +254,13 @@ def generate_detail_block(
 
     if existing_body:
         lines.append(existing_body)
+        lines.append('')
+
+    elif language == 'en' and skill.get('overview_en'):
+        overview = skill['overview_en'][:200]
+        if len(skill['overview_en']) > 200:
+            overview += '...'
+        lines.append(overview)
         lines.append('')
 
     # 添加概述
@@ -307,7 +319,14 @@ def update_readme(readme_path: Path, skills: list[dict], dry_run: bool = False, 
     for skill in skills:
         anchor = skill['name'].lower().replace(' ', '-').replace('_', '-')
         existing_skill_metadata = existing_metadata.get(skill['name'], {})
-        description = existing_skill_metadata.get('description') or clean_table_cell(skill['description'])
+        if language == 'en':
+            description = (
+                clean_table_cell(skill.get('description_en', ''))
+                or existing_skill_metadata.get('description')
+                or clean_table_cell(skill['description'])
+            )
+        else:
+            description = clean_table_cell(skill['description'])
         limit = config['description_limit']
         short_description = description[:limit] + ('...' if len(description) > limit else '')
         display_emoji = existing_skill_metadata.get('emoji') or skill['emoji']
@@ -328,7 +347,7 @@ def update_readme(readme_path: Path, skills: list[dict], dry_run: bool = False, 
             generate_detail_block(
                 skill,
                 language,
-                existing_detail_bodies.get(skill['name'], ''),
+                '' if language == 'en' and skill.get('overview_en') else existing_detail_bodies.get(skill['name'], ''),
                 existing_metadata.get(skill['name'], {}).get('emoji', ''),
             )
             for skill in skills

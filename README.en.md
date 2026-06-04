@@ -6,7 +6,7 @@
 #### A collection of AI skills I use daily, open-sourced here
 
 [![License](https://img.shields.io/badge/License-MIT-3B82F6?style=for-the-badge)](./LICENSE)
-[![Skills](https://img.shields.io/badge/Skills-2-10B981?style=for-the-badge)](#-skills)
+[![Skills](https://img.shields.io/badge/Skills-3-10B981?style=for-the-badge)](#-skills)
 [![AgentSkills](https://img.shields.io/badge/AgentSkills-Standard-8B5CF6?style=for-the-badge)](https://agentskills.io)
 
 ![Claude Code](https://img.shields.io/badge/Claude_Code-Skill-D97706?style=flat-square&logo=anthropic&logoColor=white)
@@ -28,6 +28,7 @@ These are tools I've tested in my own projects and found genuinely useful before
 
 | Name | One-liner | Platforms |
 |---|---|---|
+| 📄 [**paper-explainer**](#-paper-explainer) | When the user uploads a paper PDF or provides an arXiv link and requests interpretation. T... | Claude Code · Codex · OpenCode · OpenClaw |
 | 📦 [**skill-builder**](#-skill-builder) | Guide vague Skill ideas into executable task cards and high-quality SKILL.md files | Claude Code · Codex · OpenCode · OpenClaw |
 | 🎬 [**youtube-podcast-to-md**](#-youtube-podcast-to-md) | Extract YouTube podcast videos and organize into Chinese Markdown notes | Claude Code · Codex · OpenCode · OpenClaw |
 
@@ -48,6 +49,18 @@ Replace `<skill-name>` with the one you want, e.g. `youtube-podcast-to-md`. The 
 ## ✨ Skills
 
 <!-- SKILLS_DETAIL_START -->
+<table>
+<tr><td>
+
+### 📄 paper-explainer
+
+Breaks down papers into Introduction / Method / Experiment / Conclusion sections, explains core ideas with layman analogies, annotates reproducibility details (datasets, hyperparameters, environment),...
+
+→ [SKILL.md](./paper-explainer/SKILL.md)
+
+</td></tr>
+</table>
+
 <table>
 <tr><td>
 

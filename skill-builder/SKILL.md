@@ -7,6 +7,10 @@ description: >
   "创建一个skill""设计一个skill""做一个skill"等场景。不要用于：用户问 Skill
   概念性问题（"什么是Skill""Skill怎么写"）、用户已有详细任务卡或规格、用户要修改
   已有 Skill。
+description_en: >
+  Guide vague Skill ideas into executable task cards and high-quality SKILL.md files
+overview_en: >
+  Turns vague Skill ideas into executable task cards through structured interviews, then generates high-quality SKILL.md files.
 ---
 
 # Skill Builder

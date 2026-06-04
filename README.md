@@ -6,7 +6,7 @@
 #### 我自己日常使用的一些 AI 技能，开源在这里
 
 [![License](https://img.shields.io/badge/License-MIT-3B82F6?style=for-the-badge)](./LICENSE)
-[![Skills](https://img.shields.io/badge/Skills-2-10B981?style=for-the-badge)](#-skills)
+[![Skills](https://img.shields.io/badge/Skills-3-10B981?style=for-the-badge)](#-skills)
 [![AgentSkills](https://img.shields.io/badge/AgentSkills-Standard-8B5CF6?style=for-the-badge)](https://agentskills.io)
 
 ![Claude Code](https://img.shields.io/badge/Claude_Code-Skill-D97706?style=flat-square&logo=anthropic&logoColor=white)
@@ -28,6 +28,7 @@
 
 | 名字 | 一句话 | 平台 |
 |---|---|---|
+| 📄 [**paper-explainer**](#-paper-explainer) | 当用户上传论文 PDF 或提供 arXiv 链接并请求解读时使用。 触发："帮我解读这篇论文""解读... | Claude Code · Codex · OpenCode · OpenClaw |
 | 📦 [**skill-builder**](#-skill-builder) | 当用户想创建一个新的 Skill 但需求模糊、不完整或过于宽泛时使用。 典型触发："帮我写一个写公众... | Claude Code · Codex · OpenCode · OpenClaw |
 | 📦 [**youtube-podcast-to-md**](#-youtube-podcast-to-md) | 将 YouTube 播客视频字幕提取并整理为中文 Markdown 笔记，默认针对英文播客优化，支持... | Claude Code · Codex · OpenCode · OpenClaw |
 
@@ -48,6 +49,18 @@
 ## ✨ Skills
 
 <!-- SKILLS_DETAIL_START -->
+<table>
+<tr><td>
+
+### 📄 paper-explainer
+
+按「引言/方法/实验/结论」拆解论文，用通俗类比解读核心思想，标注可复现细节 （数据集、超参、环境），输出结构化 Markdown 笔记。
+
+→ [SKILL.md](./paper-explainer/SKILL.md)
+
+</td></tr>
+</table>
+
 <table>
 <tr><td>
 

@@ -61,6 +61,10 @@ class SyncReadmeTest(unittest.TestCase):
 name: skill-builder
 description: >
   当用户想创建一个新的 Skill 但需求模糊、不完整或过于宽泛时使用。
+description_en: >
+  Guide vague Skill ideas into executable task cards and high-quality SKILL.md files.
+overview_en: >
+  Turns vague Skill ideas into executable task cards through structured interviews.
 ---
 
 # Skill Builder
@@ -99,7 +103,15 @@ description: 将 YouTube 播客视频字幕提取并整理为中文 Markdown 笔
             en_content = (root / "README.en.md").read_text(encoding="utf-8")
             self.assertIn("| Name | One-liner | Platforms |", en_content)
             self.assertIn("[**skill-builder**]", en_content)
-            self.assertIn("把模糊的 Skill 想法收敛为可执行任务卡。", en_content)
+            self.assertIn(
+                "Guide vague Skill ideas into executable task cards and high-quality SKILL.md files.",
+                en_content,
+            )
+            self.assertIn(
+                "Turns vague Skill ideas into executable task cards through structured interviews.",
+                en_content,
+            )
+            self.assertNotIn("把模糊的 Skill 想法收敛为可执行任务卡。", en_content)
             self.assertIn(
                 "| 🎬 [**youtube-podcast-to-md**](#-youtube-podcast-to-md) | Extract YouTube podcast videos and organize into Chinese Markdown notes |",
                 en_content,
