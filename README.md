@@ -28,7 +28,7 @@
 
 | 名字 | 一句话 | 平台 |
 |---|---|---|
-| 📦 [**skill-builder**](#-skill-builder) | > | Claude Code · Codex · OpenCode · OpenClaw |
+| 📦 [**skill-builder**](#-skill-builder) | 当用户想创建一个新的 Skill 但需求模糊、不完整或过于宽泛时使用。 典型触发："帮我写一个写公众... | Claude Code · Codex · OpenCode · OpenClaw |
 | 📦 [**youtube-podcast-to-md**](#-youtube-podcast-to-md) | 将 YouTube 播客视频字幕提取并整理为中文 Markdown 笔记，默认针对英文播客优化，支持... | Claude Code · Codex · OpenCode · OpenClaw |
 
 ---
@@ -52,6 +52,8 @@
 <tr><td>
 
 ### 📦 skill-builder
+
+把模糊的 Skill 想法，通过结构化访谈收敛为可执行任务卡，再生成高质量 SKILL.md。
 
 → [SKILL.md](./skill-builder/SKILL.md)
 

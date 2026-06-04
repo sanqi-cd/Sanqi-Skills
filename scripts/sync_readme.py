@@ -24,6 +24,32 @@ from pathlib import Path
 from typing import Optional
 
 
+README_CONFIGS = {
+    'zh': {
+        'filename': 'README.md',
+        'table_pattern': r'(### Skills\s*\n\s*\n\| 名字 \| 一句话 \| 平台 \|\s*\n\|---\|---\|---\|\s*\n)(.*?)(\s*\n---)',
+        'workflow_label': '**工作流程：**',
+        'trigger_label': '**怎么触发：**',
+        'preview_label': '📄 预览 README.md 变更:',
+        'updated_label': '✅ 已更新 README.md',
+        'missing_label': '❌ README.md 不存在',
+        'unchanged_label': 'ℹ️ README.md 无需更新',
+        'description_limit': 50,
+    },
+    'en': {
+        'filename': 'README.en.md',
+        'table_pattern': r'(### Skills\s*\n\s*\n\| Name \| One-liner \| Platforms \|\s*\n\|---\|---\|---\|\s*\n)(.*?)(\s*\n---)',
+        'workflow_label': '**Workflow:**',
+        'trigger_label': '**How to trigger:**',
+        'preview_label': '📄 Preview README.en.md changes:',
+        'updated_label': '✅ Updated README.en.md',
+        'missing_label': '❌ README.en.md does not exist',
+        'unchanged_label': 'ℹ️ README.en.md no changes needed',
+        'description_limit': 90,
+    },
+}
+
+
 def parse_frontmatter(content: str) -> dict:
     """解析 SKILL.md 的 YAML frontmatter"""
     match = re.match(r'^---\s*\n(.*?)\n---\s*\n', content, re.DOTALL)
@@ -32,13 +58,83 @@ def parse_frontmatter(content: str) -> dict:
 
     frontmatter_text = match.group(1)
     result = {}
+    lines = frontmatter_text.split('\n')
+    i = 0
 
-    for line in frontmatter_text.split('\n'):
+    while i < len(lines):
+        line = lines[i]
+        stripped = line.strip()
+        if not stripped or stripped.startswith('#') or line.startswith((' ', '\t')):
+            i += 1
+            continue
         if ':' in line:
             key, value = line.split(':', 1)
-            result[key.strip()] = value.strip().strip('"').strip("'")
+            key = key.strip()
+            value = value.strip()
+
+            if value in ('>', '|', '>-', '|-', '>+', '|+'):
+                block_style = value[0]
+                block_lines = []
+                i += 1
+                while i < len(lines):
+                    next_line = lines[i]
+                    next_stripped = next_line.strip()
+                    if next_stripped and not next_line.startswith((' ', '\t')) and ':' in next_line:
+                        break
+                    block_lines.append(next_stripped)
+                    i += 1
+
+                if block_style == '>':
+                    result[key] = ' '.join(part for part in block_lines if part).strip()
+                else:
+                    result[key] = '\n'.join(block_lines).strip()
+                continue
+
+            result[key] = value.strip('"').strip("'")
+        i += 1
 
     return result
+
+
+def parse_existing_table_metadata(content: str, language: str) -> dict:
+    """读取现有 README 表格元数据，用于保留 README.en.md 的人工英文文案"""
+    table_pattern = README_CONFIGS[language]['table_pattern']
+    match = re.search(table_pattern, content, flags=re.DOTALL)
+    if not match:
+        return {}
+
+    metadata = {}
+    for row in match.group(2).splitlines():
+        columns = [column.strip() for column in row.strip().strip('|').split('|')]
+        if len(columns) < 3:
+            continue
+        name_match = re.search(r'^(?P<emoji>.*?)\s*\[\*\*(?P<name>.+?)\*\*\]', columns[0])
+        if name_match:
+            name = name_match.group('name')
+            metadata[name] = {
+                'emoji': name_match.group('emoji').strip(),
+                'description': columns[1],
+            }
+
+    return metadata
+
+
+def parse_existing_detail_bodies(content: str) -> dict:
+    """读取现有详情块正文，用于保留 README.en.md 的人工英文详情"""
+    detail_start = '<!-- SKILLS_DETAIL_START -->'
+    detail_end = '<!-- SKILLS_DETAIL_END -->'
+    if detail_start not in content or detail_end not in content:
+        return {}
+
+    detail_content = content.split(detail_start, 1)[1].split(detail_end, 1)[0]
+    blocks = {}
+    block_pattern = r'<table>\s*<tr><td>\s*###\s+\S+\s+(.+?)\s*\n\n(.*?)\n\n→ \[SKILL\.md\]'
+    for name, body in re.findall(block_pattern, detail_content, flags=re.DOTALL):
+        body = body.strip()
+        if body:
+            blocks[name.strip()] = body
+
+    return blocks
 
 
 def extract_sections(content: str) -> dict:
@@ -48,10 +144,12 @@ def extract_sections(content: str) -> dict:
 
     sections = {}
 
-    # 提取概述
-    overview_match = re.search(r'^##\s*概述\s*\n(.*?)(?=\n##|\Z)', content, re.DOTALL | re.MULTILINE)
-    if overview_match:
-        sections['overview'] = overview_match.group(1).strip()
+    # 提取概述；新 skill 常用“目标”作为一句话说明
+    for heading in ['概述', '目标', '简介', 'Overview', 'Goal']:
+        overview_match = re.search(rf'^##\s*{heading}\s*\n(.*?)(?=\n##|\Z)', content, re.DOTALL | re.MULTILINE)
+        if overview_match:
+            sections['overview'] = overview_match.group(1).strip()
+            break
 
     # 提取工作流（简化版）
     workflow_match = re.search(r'^##\s*工作流.*?\n(.*?)(?=\n##|\Z)', content, re.DOTALL | re.MULTILINE)
@@ -108,6 +206,11 @@ def get_skill_info(skill_dir: Path) -> Optional[dict]:
     }
 
 
+def clean_table_cell(value: str) -> str:
+    """清理 Markdown 表格单元格，避免换行和竖线破坏表格"""
+    return value.replace('\n', ' ').replace('|', '\\|').strip()
+
+
 def scan_skills(repo_root: Path) -> list[dict]:
     """扫描所有 skill 目录"""
     skills = []
@@ -125,20 +228,31 @@ def scan_skills(repo_root: Path) -> list[dict]:
     return skills
 
 
-def generate_detail_block(skill: dict) -> str:
+def generate_detail_block(
+    skill: dict,
+    language: str = 'zh',
+    existing_body: str = '',
+    display_emoji: str = '',
+) -> str:
     """生成单个 skill 的详细区块 HTML"""
     anchor = skill['name'].lower().replace(' ', '-').replace('_', '-')
+    config = README_CONFIGS[language]
+    emoji = display_emoji or skill['emoji']
 
     lines = [
         '<table>',
         '<tr><td>',
         '',
-        f'### {skill["emoji"]} {skill["name"]}',
+        f'### {emoji} {skill["name"]}',
         ''
     ]
 
+    if existing_body:
+        lines.append(existing_body)
+        lines.append('')
+
     # 添加概述
-    if skill['overview']:
+    elif skill['overview']:
         # 截取前200字
         overview = skill['overview'][:200]
         if len(skill['overview']) > 200:
@@ -147,15 +261,15 @@ def generate_detail_block(skill: dict) -> str:
         lines.append('')
 
     # 添加工作流步骤
-    if skill['steps']:
-        lines.append('**工作流程：**')
+    if not existing_body and skill['steps']:
+        lines.append(config['workflow_label'])
         for i, step in enumerate(skill['steps'], 1):
             lines.append(f'{i}. {step}')
         lines.append('')
 
     # 添加触发方式
-    if skill['trigger']:
-        lines.append('**怎么触发：**')
+    if not existing_body and skill['trigger']:
+        lines.append(config['trigger_label'])
         lines.append('```')
         lines.append(skill['trigger'])
         lines.append('```')
@@ -171,14 +285,17 @@ def generate_detail_block(skill: dict) -> str:
     return '\n'.join(lines)
 
 
-def update_readme(readme_path: Path, skills: list[dict], dry_run: bool = False) -> bool:
+def update_readme(readme_path: Path, skills: list[dict], dry_run: bool = False, language: str = 'zh') -> bool:
     """更新 README.md"""
     if not readme_path.exists():
-        print(f"❌ README.md 不存在: {readme_path}")
+        print(f"{README_CONFIGS[language]['missing_label']}: {readme_path}")
         return False
 
     content = readme_path.read_text(encoding='utf-8')
     original_content = content
+    existing_metadata = parse_existing_table_metadata(content, language) if language == 'en' else {}
+    existing_detail_bodies = parse_existing_detail_bodies(content) if language == 'en' else {}
+    config = README_CONFIGS[language]
 
     # 1. 更新徽章数量
     badge_pattern = r'\[!\[Skills\]\(https://img\.shields\.io/badge/Skills-\d+-'
@@ -186,15 +303,19 @@ def update_readme(readme_path: Path, skills: list[dict], dry_run: bool = False) 
     content = re.sub(badge_pattern, new_badge, content)
 
     # 2. 更新 Skills 表格
-    table_pattern = r'(### Skills\s*\n\s*\n\| 名字 \| 一句话 \| 平台 \|\s*\n\|---\|---\|---\|\s*\n)(.*?)(\s*\n---)'
     table_rows = []
     for skill in skills:
         anchor = skill['name'].lower().replace(' ', '-').replace('_', '-')
-        row = f"| {skill['emoji']} [**{skill['name']}**](#-{anchor}) | {skill['description'][:50]}{'...' if len(skill['description']) > 50 else ''} | {skill['platforms']} |"
+        existing_skill_metadata = existing_metadata.get(skill['name'], {})
+        description = existing_skill_metadata.get('description') or clean_table_cell(skill['description'])
+        limit = config['description_limit']
+        short_description = description[:limit] + ('...' if len(description) > limit else '')
+        display_emoji = existing_skill_metadata.get('emoji') or skill['emoji']
+        row = f"| {display_emoji} [**{skill['name']}**](#-{anchor}) | {short_description} | {skill['platforms']} |"
         table_rows.append(row)
 
     new_table = '\n'.join(table_rows)
-    content = re.sub(table_pattern, rf'\1{new_table}\3', content, flags=re.DOTALL)
+    content = re.sub(config['table_pattern'], rf'\1{new_table}\3', content, flags=re.DOTALL)
 
     # 3. 更新 Skills 详细区块
     # 查找标记位
@@ -203,7 +324,15 @@ def update_readme(readme_path: Path, skills: list[dict], dry_run: bool = False) 
 
     if detail_start in content and detail_end in content:
         # 生成所有 skill 的详细区块
-        detail_blocks = [generate_detail_block(skill) for skill in skills]
+        detail_blocks = [
+            generate_detail_block(
+                skill,
+                language,
+                existing_detail_bodies.get(skill['name'], ''),
+                existing_metadata.get(skill['name'], {}).get('emoji', ''),
+            )
+            for skill in skills
+        ]
         new_details = f'{detail_start}\n' + '\n'.join(detail_blocks) + detail_end
 
         # 替换标记位之间的内容
@@ -211,7 +340,7 @@ def update_readme(readme_path: Path, skills: list[dict], dry_run: bool = False) 
         content = re.sub(detail_pattern, new_details, content, flags=re.DOTALL)
 
     if dry_run:
-        print("📄 预览 README.md 变更:")
+        print(config['preview_label'])
         print("-" * 50)
         if content != original_content:
             print("✅ 检测到以下变更:")
@@ -224,17 +353,32 @@ def update_readme(readme_path: Path, skills: list[dict], dry_run: bool = False) 
 
     if content != original_content:
         readme_path.write_text(content, encoding='utf-8')
-        print(f"✅ 已更新 README.md")
+        print(config['updated_label'])
         print(f"   - Skills 数量: {len(skills)}")
         print(f"   - 详细区块: 已自动生成")
         return True
     else:
-        print("ℹ️ README.md 无需更新")
+        print(config['unchanged_label'])
         return False
 
 
+def sync_readmes(repo_root: Path, dry_run: bool = False) -> bool:
+    """扫描一次 skill，并同步中英文 README"""
+    skills = scan_skills(repo_root)
+    print(f"🔍 发现 {len(skills)} 个 Skill:")
+    for skill in skills:
+        print(f"   - {skill['emoji']} {skill['name']}: {skill['description'][:40]}...")
+
+    changed = False
+    for language, config in README_CONFIGS.items():
+        readme_path = repo_root / config['filename']
+        changed = update_readme(readme_path, skills, dry_run, language) or changed
+
+    return changed
+
+
 def main():
-    parser = argparse.ArgumentParser(description='自动同步 Skills 到 README.md')
+    parser = argparse.ArgumentParser(description='自动同步 Skills 到 README.md 和 README.en.md')
     parser.add_argument('--dry-run', action='store_true', help='只预览变更，不实际修改')
     parser.add_argument('--repo-root', type=str, default=None, help='仓库根目录路径')
     args = parser.parse_args()
@@ -248,15 +392,7 @@ def main():
 
     print(f"📁 扫描目录: {repo_root}")
 
-    # 扫描 skills
-    skills = scan_skills(repo_root)
-    print(f"🔍 发现 {len(skills)} 个 Skill:")
-    for skill in skills:
-        print(f"   - {skill['emoji']} {skill['name']}: {skill['description'][:40]}...")
-
-    # 更新 README
-    readme_path = repo_root / "README.md"
-    update_readme(readme_path, skills, args.dry_run)
+    sync_readmes(repo_root, args.dry_run)
 
 
 if __name__ == '__main__':
