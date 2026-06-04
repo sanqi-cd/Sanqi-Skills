@@ -6,7 +6,7 @@
 #### 我自己日常使用的一些 AI 技能，开源在这里
 
 [![License](https://img.shields.io/badge/License-MIT-3B82F6?style=for-the-badge)](./LICENSE)
-[![Skills](https://img.shields.io/badge/Skills-1-10B981?style=for-the-badge)](#-skills)
+[![Skills](https://img.shields.io/badge/Skills-2-10B981?style=for-the-badge)](#-skills)
 [![AgentSkills](https://img.shields.io/badge/AgentSkills-Standard-8B5CF6?style=for-the-badge)](https://agentskills.io)
 
 ![Claude Code](https://img.shields.io/badge/Claude_Code-Skill-D97706?style=flat-square&logo=anthropic&logoColor=white)
@@ -28,7 +28,8 @@
 
 | 名字 | 一句话 | 平台 |
 |---|---|---|
-| 🎬 [**youtube-podcast-to-md**](#-youtube-podcast-to-md) | 将 YouTube 英文播客视频提取并整理为中文 Markdown 笔记 | Claude Code · Codex · OpenCode · OpenClaw |
+| 📦 [**skill-builder**](#-skill-builder) | > | Claude Code · Codex · OpenCode · OpenClaw |
+| 📦 [**youtube-podcast-to-md**](#-youtube-podcast-to-md) | 将 YouTube 播客视频字幕提取并整理为中文 Markdown 笔记，默认针对英文播客优化，支持... | Claude Code · Codex · OpenCode · OpenClaw |
 
 ---
 
@@ -50,25 +51,27 @@
 <table>
 <tr><td>
 
-### 🎬 youtube-podcast-to-md
+### 📦 skill-builder
+
+→ [SKILL.md](./skill-builder/SKILL.md)
+
+</td></tr>
+</table>
+
+<table>
+<tr><td>
+
+### 📦 youtube-podcast-to-md
 
 将 YouTube 播客视频的字幕提取，整理为高质量中文 Markdown 文档，默认针对英文播客优化；其他语言也可尽力处理。两种输出模式：
+
 - **精简版（summary）**：提取核心观点、关键数据、结构化摘要，过滤闲聊和重复表达
-- **完整版（full）**：高保真还原整个对话，保留对话结构、论述逻辑和信息完整性...
-
-**工作流程：**
-
-1. Step 1：确认输入参数
-2. Step 2：环境准备
-3. Step 3：获取字幕
-4. Step 4：字幕清洗与分块
-5. Step 5：模型内容重建（核心步骤）
+- **完整版（full）**：高保真还原整个对话，保留对话结构、论述逻辑和信息完整性，经轻度书面化处理后呈现为自然流畅的中文对话
 
 → [SKILL.md](./youtube-podcast-to-md/SKILL.md)
 
 </td></tr>
 </table>
-
 <!-- SKILLS_DETAIL_END -->
 
 ---
