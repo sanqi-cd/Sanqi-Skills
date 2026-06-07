@@ -6,7 +6,7 @@
 #### A collection of AI skills I use daily, open-sourced here
 
 [![License](https://img.shields.io/badge/License-MIT-3B82F6?style=for-the-badge)](./LICENSE)
-[![Skills](https://img.shields.io/badge/Skills-3-10B981?style=for-the-badge)](#-skills)
+[![Skills](https://img.shields.io/badge/Skills-4-10B981?style=for-the-badge)](#-skills)
 [![AgentSkills](https://img.shields.io/badge/AgentSkills-Standard-8B5CF6?style=for-the-badge)](https://agentskills.io)
 
 ![Claude Code](https://img.shields.io/badge/Claude_Code-Skill-D97706?style=flat-square&logo=anthropic&logoColor=white)
@@ -30,6 +30,7 @@ These are tools I've tested in my own projects and found genuinely useful before
 |---|---|---|
 | 📄 [**paper-explainer**](#-paper-explainer) | When the user uploads a paper PDF or provides an arXiv link and requests interpretation. T... | Claude Code · Codex · OpenCode · OpenClaw |
 | 📦 [**skill-builder**](#-skill-builder) | Guide vague Skill ideas into executable task cards and high-quality SKILL.md files | Claude Code · Codex · OpenCode · OpenClaw |
+| 📦 [**xhs-image-text-generator**](#-xhs-image-text-generator) | Use when the user wants to turn an HTML page, Markdown article, plain text, interview note... | Claude Code · Codex · OpenCode · OpenClaw |
 | 🎬 [**youtube-podcast-to-md**](#-youtube-podcast-to-md) | Extract YouTube podcast videos and organize into Chinese Markdown notes | Claude Code · Codex · OpenCode · OpenClaw |
 
 ---
@@ -69,6 +70,18 @@ Breaks down papers into Introduction / Method / Experiment / Conclusion sections
 Turns vague Skill ideas into executable task cards through structured interviews, then generates high-quality SKILL.md files.
 
 → [SKILL.md](./skill-builder/SKILL.md)
+
+</td></tr>
+</table>
+
+<table>
+<tr><td>
+
+### 📦 xhs-image-text-generator
+
+This Skill helps users extract the topic, audience, hook, and visual structure from source material and produce a publish-ready Xiaohongshu/RedNote carousel package. The final output includes titles, ...
+
+→ [SKILL.md](./xhs-image-text-generator/SKILL.md)
 
 </td></tr>
 </table>

@@ -6,7 +6,7 @@
 #### 我自己日常使用的一些 AI 技能，开源在这里
 
 [![License](https://img.shields.io/badge/License-MIT-3B82F6?style=for-the-badge)](./LICENSE)
-[![Skills](https://img.shields.io/badge/Skills-3-10B981?style=for-the-badge)](#-skills)
+[![Skills](https://img.shields.io/badge/Skills-4-10B981?style=for-the-badge)](#-skills)
 [![AgentSkills](https://img.shields.io/badge/AgentSkills-Standard-8B5CF6?style=for-the-badge)](https://agentskills.io)
 
 ![Claude Code](https://img.shields.io/badge/Claude_Code-Skill-D97706?style=flat-square&logo=anthropic&logoColor=white)
@@ -30,6 +30,7 @@
 |---|---|---|
 | 📄 [**paper-explainer**](#-paper-explainer) | 当用户上传论文 PDF 或提供 arXiv 链接并请求解读时使用。 触发："帮我解读这篇论文""解读... | Claude Code · Codex · OpenCode · OpenClaw |
 | 📦 [**skill-builder**](#-skill-builder) | 当用户想创建一个新的 Skill 但需求模糊、不完整或过于宽泛时使用。 典型触发："帮我写一个写公众... | Claude Code · Codex · OpenCode · OpenClaw |
+| 📦 [**xhs-image-text-generator**](#-xhs-image-text-generator) | 当用户想把 HTML 网页、Markdown 文章、纯文本、访谈记录、产品资料或一个主题改造成可直接... | Claude Code · Codex · OpenCode · OpenClaw |
 | 📦 [**youtube-podcast-to-md**](#-youtube-podcast-to-md) | 将 YouTube 播客视频字幕提取并整理为中文 Markdown 笔记，默认针对英文播客优化，支持... | Claude Code · Codex · OpenCode · OpenClaw |
 
 ---
@@ -69,6 +70,18 @@
 把模糊的 Skill 想法，通过结构化访谈收敛为可执行任务卡，再生成高质量 SKILL.md。
 
 → [SKILL.md](./skill-builder/SKILL.md)
+
+</td></tr>
+</table>
+
+<table>
+<tr><td>
+
+### 📦 xhs-image-text-generator
+
+这个 Skill 帮用户从素材中提炼选题、人群、卖点和视觉结构，生成一套最终可交付的小红书图文发布包。 核心产出包括标题、封面方案、分页脚本、可复制正文、标签、置顶评论/回复、生图提示词、图片页和发布前质量检查。 执行过程中会在必要时询问缺失上下文；需要生图时默认直接调用可用生图模型。
+
+→ [SKILL.md](./xhs-image-text-generator/SKILL.md)
 
 </td></tr>
 </table>
