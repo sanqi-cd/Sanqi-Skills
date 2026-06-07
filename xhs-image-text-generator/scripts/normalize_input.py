@@ -96,7 +96,8 @@ def clean_text(text: str) -> str:
 
 
 def normalize_markdown(raw: str) -> str:
-    text = re.sub(r"\A---\n.*?\n---\n", "", raw, flags=re.S)
+    text = raw.replace("\r\n", "\n").replace("\r", "\n")
+    text = re.sub(r"\A---\n.*?\n---\n", "", text, flags=re.S)
     text = re.sub(r"!\[[^\]]*\]\([^)]+\)", "", text)
     text = re.sub(r"\[([^\]]+)\]\([^)]+\)", r"\1", text)
     text = re.sub(r"`{1,3}", "", text)
@@ -113,8 +114,11 @@ def trim_lines(lines: Iterable[str], max_chars: int) -> str:
     result: list[str] = []
     count = 0
     for line in lines:
-        if count + len(line) + 1 > max_chars:
+        if count >= max_chars:
             break
+        remaining = max_chars - count
+        if len(line) > remaining:
+            line = line[:remaining]
         result.append(line)
         count += len(line) + 1
     return "\n".join(result).strip()
