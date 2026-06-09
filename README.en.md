@@ -6,7 +6,7 @@
 #### A collection of AI skills I use daily, open-sourced here
 
 [![License](https://img.shields.io/badge/License-MIT-3B82F6?style=for-the-badge)](./LICENSE)
-[![Skills](https://img.shields.io/badge/Skills-4-10B981?style=for-the-badge)](#-skills)
+[![Skills](https://img.shields.io/badge/Skills-5-10B981?style=for-the-badge)](#-skills)
 [![AgentSkills](https://img.shields.io/badge/AgentSkills-Standard-8B5CF6?style=for-the-badge)](https://agentskills.io)
 
 ![Claude Code](https://img.shields.io/badge/Claude_Code-Skill-D97706?style=flat-square&logo=anthropic&logoColor=white)
@@ -28,6 +28,7 @@ These are tools I've tested in my own projects and found genuinely useful before
 
 | Name | One-liner | Platforms |
 |---|---|---|
+| 🧭 [**learning-path-designer**](#-learning-path-designer) | Use when the user wants a personalized learning path, study plan, skill acquisition roadma... | Claude Code · Codex · OpenCode · OpenClaw |
 | 📄 [**paper-explainer**](#-paper-explainer) | When the user uploads a paper PDF or provides an arXiv link and requests interpretation. T... | Claude Code · Codex · OpenCode · OpenClaw |
 | 📦 [**skill-builder**](#-skill-builder) | Guide vague Skill ideas into executable task cards and high-quality SKILL.md files | Claude Code · Codex · OpenCode · OpenClaw |
 | 📦 [**xhs-image-text-generator**](#-xhs-image-text-generator) | Use when the user wants to turn an HTML page, Markdown article, plain text, interview note... | Claude Code · Codex · OpenCode · OpenClaw |
@@ -50,6 +51,18 @@ Replace `<skill-name>` with the one you want, e.g. `youtube-podcast-to-md`. The 
 ## ✨ Skills
 
 <!-- SKILLS_DETAIL_START -->
+<table>
+<tr><td>
+
+### 🧭 learning-path-designer
+
+This Skill diagnoses the user's learning goal, current level, time budget, work context, and constraints, then selects a matching methodology mix and produces an executable, verifiable, reviewable lea...
+
+→ [SKILL.md](./learning-path-designer/SKILL.md)
+
+</td></tr>
+</table>
+
 <table>
 <tr><td>
 

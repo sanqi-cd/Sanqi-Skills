@@ -6,7 +6,7 @@
 #### 我自己日常使用的一些 AI 技能，开源在这里
 
 [![License](https://img.shields.io/badge/License-MIT-3B82F6?style=for-the-badge)](./LICENSE)
-[![Skills](https://img.shields.io/badge/Skills-4-10B981?style=for-the-badge)](#-skills)
+[![Skills](https://img.shields.io/badge/Skills-5-10B981?style=for-the-badge)](#-skills)
 [![AgentSkills](https://img.shields.io/badge/AgentSkills-Standard-8B5CF6?style=for-the-badge)](https://agentskills.io)
 
 ![Claude Code](https://img.shields.io/badge/Claude_Code-Skill-D97706?style=flat-square&logo=anthropic&logoColor=white)
@@ -28,6 +28,7 @@
 
 | 名字 | 一句话 | 平台 |
 |---|---|---|
+| 🧭 [**learning-path-designer**](#-learning-path-designer) | 当用户想学习某个领域、技能、工具、课程、考试、证书、职业能力或知识体系，并需要个性化学习路径、学习计... | Claude Code · Codex · OpenCode · OpenClaw |
 | 📄 [**paper-explainer**](#-paper-explainer) | 当用户上传论文 PDF 或提供 arXiv 链接并请求解读时使用。 触发："帮我解读这篇论文""解读... | Claude Code · Codex · OpenCode · OpenClaw |
 | 📦 [**skill-builder**](#-skill-builder) | 当用户想创建一个新的 Skill 但需求模糊、不完整或过于宽泛时使用。 典型触发："帮我写一个写公众... | Claude Code · Codex · OpenCode · OpenClaw |
 | 📦 [**xhs-image-text-generator**](#-xhs-image-text-generator) | 当用户想把 HTML 网页、Markdown 文章、纯文本、访谈记录、产品资料或一个主题改造成可直接... | Claude Code · Codex · OpenCode · OpenClaw |
@@ -50,6 +51,18 @@
 ## ✨ Skills
 
 <!-- SKILLS_DETAIL_START -->
+<table>
+<tr><td>
+
+### 🧭 learning-path-designer
+
+这个 Skill 先诊断用户的学习目标、基础、时间、职业场景和约束，再选择最匹配的学习方法论组合，生成可执行、可验证、可复盘的个性化学习路径。 完整输出优先生成一个单文件 HTML 学习成长地图，包含起点终点、阶段站点、知识树、任务树、行动卡、产出物、通关标准和复盘机制。
+
+→ [SKILL.md](./learning-path-designer/SKILL.md)
+
+</td></tr>
+</table>
+
 <table>
 <tr><td>
 
