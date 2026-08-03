@@ -1,0 +1,17 @@
+{
+  "skill_name": "xhs-image-text-generator",
+  "cases": [
+    {"prompt": "把这篇 Markdown 做成 8 页小红书图文并生成发布文案。", "should_trigger": true, "reason": "Explicit publish-ready carousel request."},
+    {"prompt": "根据这个产品资料直接生成小红书配图。", "should_trigger": true, "reason": "Source-to-image delivery request."},
+    {"prompt": "Make this interview into a RedNote carousel with final images.", "should_trigger": true, "reason": "RedNote carousel assets requested."},
+    {"prompt": "围绕远程办公给我做一套 6 页小红书卡片。", "should_trigger": true, "reason": "Topic-to-carousel request."},
+    {"prompt": "这个网页内容太长，提炼后做成长图轮播。", "should_trigger": true, "reason": "Web content needs carousel transformation."},
+    {"prompt": "直接给我封面、内页、正文、标签和置顶评论。", "should_trigger": true, "reason": "Complete publish package requested."},
+    {"prompt": "总结一下这篇文章。", "should_trigger": false, "reason": "Generic summary without carousel output."},
+    {"prompt": "写一篇微信公众号长文。", "should_trigger": false, "reason": "Different publishing format."},
+    {"prompt": "生成一个短视频脚本。", "should_trigger": false, "reason": "Video script request."},
+    {"prompt": "给我十个小红书选题，不用做图。", "should_trigger": false, "reason": "Topic ideation only."},
+    {"prompt": "把图片压缩到 1MB。", "should_trigger": false, "reason": "Image utility operation."},
+    {"prompt": "帮我分析这个账号的数据。", "should_trigger": false, "reason": "Analytics request rather than content production."}
+  ]
+}

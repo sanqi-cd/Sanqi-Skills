@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import argparse
+import json
 import re
 from pathlib import Path
 
@@ -32,6 +33,9 @@ def main() -> int:
     parser.add_argument("--pages", type=int, default=8)
     args = parser.parse_args()
 
+    if not 6 <= args.pages <= 10:
+        parser.error("--pages must be between 6 and 10")
+
     root = Path(args.output_root) / slugify(args.name)
     images = root / "images"
     images.mkdir(parents=True, exist_ok=True)
@@ -40,6 +44,33 @@ def main() -> int:
         path = root / filename
         if not path.exists():
             path.write_text(content, encoding="utf-8")
+
+    carousel = root / "carousel.json"
+    if not carousel.exists():
+        pages = []
+        for number in range(1, args.pages + 1):
+            role = "cover" if number == 1 else "cta" if number == args.pages else "content"
+            pages.append({
+                "number": number,
+                "role": role,
+                "title": "TODO",
+                "subtitle": "",
+                "bullets": [],
+                "visual_note": "TODO",
+                "source_note": "",
+            })
+        carousel.write_text(json.dumps({
+            "topic": args.name,
+            "audience": "TODO",
+            "angle": "TODO",
+            "visual_system": {
+                "style": "editorial utility",
+                "background": "#F6F4EE",
+                "foreground": "#1D2420",
+                "accent": "#E5484D",
+            },
+            "pages": pages,
+        }, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
 
     manifest = root / "manifest.md"
     if manifest.read_text(encoding="utf-8").strip() == "# 小红书图文交付清单":

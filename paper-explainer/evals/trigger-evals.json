@@ -1,0 +1,17 @@
+{
+  "skill_name": "paper-explainer",
+  "cases": [
+    {"prompt": "帮我精读这个 PDF，重点解释方法和实验。", "should_trigger": true, "reason": "Explicit whole-paper interpretation."},
+    {"prompt": "Explain the equations and ablation study in this arXiv paper.", "should_trigger": true, "reason": "Method and experiment explanation."},
+    {"prompt": "这篇论文的创新点到底成立吗？请结合实验分析。", "should_trigger": true, "reason": "Needs evidence-bounded critical reading."},
+    {"prompt": "把这篇医学论文讲给没有统计背景的人听。", "should_trigger": true, "reason": "Cross-domain accessible explanation."},
+    {"prompt": "比较这两篇论文的方法假设和实验结论。", "should_trigger": true, "reason": "Related-work comparison."},
+    {"prompt": "根据论文全文生成一份可复现的阅读笔记。", "should_trigger": true, "reason": "Structured paper note request."},
+    {"prompt": "这篇论文是哪年发表的？", "should_trigger": false, "reason": "Simple bibliographic lookup."},
+    {"prompt": "这篇新闻讲了什么？", "should_trigger": false, "reason": "The source is not an academic paper."},
+    {"prompt": "翻译这段摘要，不用解释。", "should_trigger": false, "reason": "Translation-only request."},
+    {"prompt": "帮我写一篇新的机器学习论文。", "should_trigger": false, "reason": "Paper writing is not paper explanation."},
+    {"prompt": "查一下作者的个人主页。", "should_trigger": false, "reason": "Author lookup does not need deep reading."},
+    {"prompt": "解释什么是 Transformer。", "should_trigger": false, "reason": "General concept explanation without a paper."}
+  ]
+}

@@ -1,0 +1,6 @@
+interface:
+  display_name: "小红书图文生成器"
+  short_description: "将内容制作成可发布的小红书图文轮播"
+  default_prompt: "使用 $xhs-image-text-generator 把这份内容制作成 6-10 页、视觉统一且可直接发布的小红书图文轮播。"
+policy:
+  allow_implicit_invocation: true

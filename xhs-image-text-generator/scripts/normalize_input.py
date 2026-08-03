@@ -13,6 +13,9 @@ from pathlib import Path
 from typing import Iterable
 
 
+MAX_DOWNLOAD_BYTES = 5 * 1024 * 1024
+
+
 class TextExtractor(HTMLParser):
     def __init__(self) -> None:
         super().__init__(convert_charrefs=True)
@@ -70,8 +73,14 @@ def read_input(source: str) -> tuple[str, str]:
             headers={"User-Agent": "Mozilla/5.0 xhs-image-text-generator"},
         )
         with urllib.request.urlopen(request, timeout=20) as response:
+            content_length = response.headers.get("Content-Length")
+            if content_length and int(content_length) > MAX_DOWNLOAD_BYTES:
+                raise ValueError("remote input exceeds the 5 MB safety limit")
             charset = response.headers.get_content_charset() or "utf-8"
-            return response.read().decode(charset, errors="replace"), source
+            payload = response.read(MAX_DOWNLOAD_BYTES + 1)
+            if len(payload) > MAX_DOWNLOAD_BYTES:
+                raise ValueError("remote input exceeds the 5 MB safety limit")
+            return payload.decode(charset, errors="replace"), source
     path = Path(source)
     return path.read_text(encoding="utf-8", errors="replace"), str(path)
 
@@ -132,7 +141,10 @@ def main() -> int:
     parser.add_argument("--max-chars", type=int, default=20000)
     args = parser.parse_args()
 
-    raw, source = read_input(args.input)
+    try:
+        raw, source = read_input(args.input)
+    except (OSError, ValueError) as exc:
+        parser.error(f"cannot read input: {exc}")
     input_format = detect_format(raw, source, args.format)
 
     title = ""

@@ -1,0 +1,23 @@
+{
+  "skill_name": "xhs-image-text-generator",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "把这篇 3000 字 AI 工具评测做成 8 页小红书图文，面向刚入门的职场人。",
+      "expected_output": "A validated 8-page carousel package with final visual assets and publication copy.",
+      "assertions": ["Extracts a clear audience and single narrative angle", "Uses exactly eight pages with cover, progression, and closing action", "Keeps text within per-page readability limits", "Maintains a consistent visual system", "Includes caption, hashtags, and delivery manifest"]
+    },
+    {
+      "id": 2,
+      "prompt": "主题是个人理财，直接帮我做小红书图文。",
+      "expected_output": "A brief clarification before producing potentially misleading financial content.",
+      "assertions": ["Asks for audience and intended angle", "Avoids inventing returns or guarantees", "Requests or identifies source evidence for factual claims", "Does not generate final pages until critical context is resolved"]
+    },
+    {
+      "id": 3,
+      "prompt": "Turn this English product launch page into a Chinese RedNote carousel and final caption.",
+      "expected_output": "A localized carousel that preserves source facts and reads naturally in Chinese.",
+      "assertions": ["Distinguishes product facts from promotional framing", "Localizes rather than mechanically translating", "Includes final image pages or a clearly reported generation failure", "Runs delivery validation before completion"]
+    }
+  ]
+}

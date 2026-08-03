@@ -1,0 +1,23 @@
+{
+  "skill_name": "paper-explainer",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "完整解读我上传的机器学习论文，尤其说明核心公式、基线和消融实验。",
+      "expected_output": "A self-contained Markdown study note grounded in the full paper.",
+      "assertions": ["Identifies the paper and evidence scope", "Explains symbols and formula intuition before conclusions", "Separates reported results from the explainer's interpretation", "Cites page, section, figure, or table locations for major claims", "Discusses limitations and reproducibility details"]
+    },
+    {
+      "id": 2,
+      "prompt": "这里只粘贴了论文摘要，请帮我完整分析所有实验。",
+      "expected_output": "A boundary-aware response that does not fabricate experiments from an abstract.",
+      "assertions": ["States that the abstract is insufficient", "Attempts to retrieve or requests the full paper when possible", "Does not invent datasets, numbers, or ablations", "May provide a clearly labeled abstract-only preliminary reading"]
+    },
+    {
+      "id": 3,
+      "prompt": "Compare the assumptions, evidence, and limitations of these two uploaded papers.",
+      "expected_output": "A structured comparison based on both source documents.",
+      "assertions": ["Uses a consistent comparison axis", "Attributes claims to the correct paper", "Distinguishes incomparable experimental settings", "Ends with a bounded synthesis rather than declaring a winner without evidence"]
+    }
+  ]
+}

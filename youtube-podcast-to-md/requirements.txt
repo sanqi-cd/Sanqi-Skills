@@ -1,0 +1,2 @@
+yt-dlp>=2025.1
+youtube-transcript-api>=1.2,<2

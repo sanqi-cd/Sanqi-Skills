@@ -17,3 +17,14 @@ venv/
 # Temp
 /tmp/
 *.tmp
+
+# Generated skill outputs
+*-workspace/
+learning-path-outputs/
+xhs-output/
+youtube-podcast-output/
+
+# Test and coverage artifacts
+.coverage
+htmlcov/
+.pytest_cache/

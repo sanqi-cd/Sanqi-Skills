@@ -1,0 +1,23 @@
+{
+  "skill_name": "skill-builder",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "帮我创建一个把客服工单分类并生成回复草稿的 skill，我只有这个想法。",
+      "expected_output": "A focused clarification followed by a complete skill package once blocking details are known.",
+      "assertions": ["Asks no more than three high-value questions at a time", "Defines triggers, non-triggers, outputs, and quality criteria", "Uses standard frontmatter", "Adds only resources that reduce real complexity", "Includes validation and eval cases"]
+    },
+    {
+      "id": 2,
+      "prompt": "这里有一份完整任务卡，请直接生成 skill，不需要再确认。",
+      "expected_output": "A complete implementation without redundant clarification.",
+      "assertions": ["Uses the supplied specification directly", "Creates a concise SKILL.md with progressive disclosure", "Adds agents/openai.yaml", "Tests deterministic scripts", "Reports verification results"]
+    },
+    {
+      "id": 3,
+      "prompt": "审核并优化这个已有 skill，使它更容易触发且更可靠。",
+      "expected_output": "An evidence-based audit and implemented improvements.",
+      "assertions": ["Preserves useful existing behavior", "Improves description precision with positive and negative boundaries", "Checks all referenced files", "Adds regression tests or evals proportional to risk", "Does not add unrelated documentation clutter"]
+    }
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "skill_name": "skill-builder",
+  "cases": [
+    {"prompt": "帮我创建一个自动审核合同的 skill。", "should_trigger": true, "reason": "New skill creation request."},
+    {"prompt": "把这套每周报告流程封装成 Agent Skill。", "should_trigger": true, "reason": "Workflow packaging request."},
+    {"prompt": "优化现有 SKILL.md，并补上脚本和测试。", "should_trigger": true, "reason": "Existing skill improvement."},
+    {"prompt": "Build a reusable skill for triaging customer support tickets.", "should_trigger": true, "reason": "Explicit skill package request."},
+    {"prompt": "给这个 skill 设计 trigger evals。", "should_trigger": true, "reason": "Skill evaluation design."},
+    {"prompt": "检查这个技能是否符合 Agent Skills 标准。", "should_trigger": true, "reason": "Standards compliance review."},
+    {"prompt": "什么是 Agent Skill？", "should_trigger": false, "reason": "Conceptual question only."},
+    {"prompt": "帮我写一篇公众号文章。", "should_trigger": false, "reason": "Direct content task, not skill creation."},
+    {"prompt": "修复这个 Python 函数。", "should_trigger": false, "reason": "Ordinary code maintenance."},
+    {"prompt": "列出我安装了哪些 skill。", "should_trigger": false, "reason": "Skill inventory request."},
+    {"prompt": "把这个 skill 安装到 Codex。", "should_trigger": false, "reason": "Installation rather than creation."},
+    {"prompt": "总结 Agent Skills 规范。", "should_trigger": false, "reason": "Documentation summary only."}
+  ]
+}

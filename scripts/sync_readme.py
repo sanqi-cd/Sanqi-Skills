@@ -11,13 +11,13 @@
    - Skills 详细区块（自动生成）
 
 使用方法：
-    python scripts/sync_readme.py [--dry-run]
+    python scripts/sync_readme.py [--dry-run | --check]
 
 参数：
     --dry-run    只预览变更，不实际修改文件
+    --check      检查 README 是否已同步，未同步时返回非零状态
 """
 
-import os
 import re
 import argparse
 from pathlib import Path
@@ -51,13 +51,13 @@ README_CONFIGS = {
 
 
 def parse_frontmatter(content: str) -> dict:
-    """解析 SKILL.md 的 YAML frontmatter"""
+    """解析仓库使用的 YAML frontmatter 子集，包括一级嵌套映射。"""
     match = re.match(r'^---\s*\n(.*?)\n---\s*\n', content, re.DOTALL)
     if not match:
         return {}
 
     frontmatter_text = match.group(1)
-    result = {}
+    result: dict = {}
     lines = frontmatter_text.split('\n')
     i = 0
 
@@ -88,6 +88,21 @@ def parse_frontmatter(content: str) -> dict:
                     result[key] = ' '.join(part for part in block_lines if part).strip()
                 else:
                     result[key] = '\n'.join(block_lines).strip()
+                continue
+
+            if not value:
+                nested = {}
+                i += 1
+                while i < len(lines):
+                    next_line = lines[i]
+                    if next_line.strip() and not next_line.startswith((' ', '\t')):
+                        break
+                    nested_match = re.match(r'^\s+([A-Za-z0-9_-]+):\s*(.*?)\s*$', next_line)
+                    if nested_match:
+                        nested_key, nested_value = nested_match.groups()
+                        nested[nested_key] = nested_value.strip('"').strip("'")
+                    i += 1
+                result[key] = nested
                 continue
 
             result[key] = value.strip('"').strip("'")
@@ -177,15 +192,18 @@ def get_skill_info(skill_dir: Path) -> Optional[dict]:
     content = skill_md.read_text(encoding='utf-8')
     frontmatter = parse_frontmatter(content)
     sections = extract_sections(content)
+    metadata = frontmatter.get('metadata', {})
+    if not isinstance(metadata, dict):
+        metadata = {}
 
     # 从 frontmatter 获取基本信息
     name = frontmatter.get('name', skill_dir.name)
-    description = frontmatter.get('description', '')
-    description_en = frontmatter.get('description_en', '')
-    emoji = frontmatter.get('emoji', '📦')
-    platforms = frontmatter.get('platforms', 'Claude Code · Codex · OpenCode · OpenClaw')
-    overview = frontmatter.get('overview', '') or sections.get('overview', '')
-    overview_en = frontmatter.get('overview_en', '')
+    description = metadata.get('description_zh') or frontmatter.get('description', '')
+    description_en = metadata.get('description_en', '')
+    emoji = metadata.get('emoji', '📦')
+    platforms = metadata.get('platforms', 'Claude Code · Codex · OpenCode · OpenClaw')
+    overview = metadata.get('overview_zh', '') or sections.get('overview', '')
+    overview_en = metadata.get('overview_en', '')
 
     # 尝试从内容中提取一句话描述（如果 frontmatter 没有提供）
     if not description:
@@ -202,6 +220,7 @@ def get_skill_info(skill_dir: Path) -> Optional[dict]:
         'description': description,
         'description_en': description_en,
         'emoji': emoji,
+        'emoji_explicit': bool(metadata.get('emoji')),
         'platforms': platforms,
         'skill_md_path': f"./{skill_dir.name}/SKILL.md",
         'overview': overview,
@@ -329,7 +348,7 @@ def update_readme(readme_path: Path, skills: list[dict], dry_run: bool = False, 
             description = clean_table_cell(skill['description'])
         limit = config['description_limit']
         short_description = description[:limit] + ('...' if len(description) > limit else '')
-        display_emoji = existing_skill_metadata.get('emoji') or skill['emoji']
+        display_emoji = skill['emoji'] if skill['emoji_explicit'] else existing_skill_metadata.get('emoji') or skill['emoji']
         row = f"| {display_emoji} [**{skill['name']}**](#-{anchor}) | {short_description} | {skill['platforms']} |"
         table_rows.append(row)
 
@@ -348,7 +367,7 @@ def update_readme(readme_path: Path, skills: list[dict], dry_run: bool = False, 
                 skill,
                 language,
                 '' if language == 'en' and skill.get('overview_en') else existing_detail_bodies.get(skill['name'], ''),
-                existing_metadata.get(skill['name'], {}).get('emoji', ''),
+                skill['emoji'] if skill['emoji_explicit'] else existing_metadata.get(skill['name'], {}).get('emoji', ''),
             )
             for skill in skills
         ]
@@ -368,7 +387,7 @@ def update_readme(readme_path: Path, skills: list[dict], dry_run: bool = False, 
             print(f"  - 详细区块: 已自动生成")
         else:
             print("ℹ️ 没有检测到变更")
-        return True
+        return content != original_content
 
     if content != original_content:
         readme_path.write_text(content, encoding='utf-8')
@@ -398,7 +417,9 @@ def sync_readmes(repo_root: Path, dry_run: bool = False) -> bool:
 
 def main():
     parser = argparse.ArgumentParser(description='自动同步 Skills 到 README.md 和 README.en.md')
-    parser.add_argument('--dry-run', action='store_true', help='只预览变更，不实际修改')
+    mode = parser.add_mutually_exclusive_group()
+    mode.add_argument('--dry-run', action='store_true', help='只预览变更，不实际修改')
+    mode.add_argument('--check', action='store_true', help='检查 README 是否已同步')
     parser.add_argument('--repo-root', type=str, default=None, help='仓库根目录路径')
     args = parser.parse_args()
 
@@ -411,7 +432,10 @@ def main():
 
     print(f"📁 扫描目录: {repo_root}")
 
-    sync_readmes(repo_root, args.dry_run)
+    changed = sync_readmes(repo_root, args.dry_run or args.check)
+    if args.check and changed:
+        print('❌ README 文件与 SKILL.md 元数据不同步，请运行 python3 scripts/sync_readme.py')
+        raise SystemExit(1)
 
 
 if __name__ == '__main__':

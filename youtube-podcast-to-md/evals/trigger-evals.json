@@ -1,0 +1,17 @@
+{
+  "skill_name": "youtube-podcast-to-md",
+  "cases": [
+    {"prompt": "把这个 YouTube 播客总结成中文 Markdown。", "should_trigger": true, "reason": "Direct transcript-to-note request."},
+    {"prompt": "提取这个访谈的字幕并翻译成中文。", "should_trigger": true, "reason": "Subtitle extraction and translation."},
+    {"prompt": "把这期两小时圆桌整理成高保真对话稿。", "should_trigger": true, "reason": "Full dialogue reconstruction."},
+    {"prompt": "Summarize this YouTube interview with timestamps in Chinese.", "should_trigger": true, "reason": "Timestamped Chinese notes requested."},
+    {"prompt": "这个视频没有字幕，也请尽量转写后做笔记。", "should_trigger": true, "reason": "Whisper fallback workflow is needed."},
+    {"prompt": "整理这期播客的核心观点、数据和行动建议。", "should_trigger": true, "reason": "Structured podcast summary."},
+    {"prompt": "下载这个 YouTube 视频。", "should_trigger": false, "reason": "Download-only request."},
+    {"prompt": "这个视频有多少播放量？", "should_trigger": false, "reason": "Metadata lookup."},
+    {"prompt": "给我推荐一些 AI 播客。", "should_trigger": false, "reason": "Recommendation request."},
+    {"prompt": "总结我上传的本地 PDF。", "should_trigger": false, "reason": "Source is not a YouTube video."},
+    {"prompt": "剪辑这个访谈的精彩片段。", "should_trigger": false, "reason": "Video editing request."},
+    {"prompt": "搜索某位嘉宾参加过哪些节目。", "should_trigger": false, "reason": "Search request rather than transcript processing."}
+  ]
+}

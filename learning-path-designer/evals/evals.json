@@ -1,0 +1,23 @@
+{
+  "skill_name": "learning-path-designer",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "我是运营，零编程基础，每周 6 小时，希望 12 周后能用 Python 自动整理 Excel 周报。请给我完整学习路径。",
+      "expected_output": "A personalized 12-week plan and validated interactive HTML growth map.",
+      "assertions": ["Diagnoses goal, baseline, time budget, and work scenario", "Defines staged deliverables and pass criteria", "Includes practice using realistic Excel reporting tasks", "Produces a single-file HTML map with persistent checkable progress"]
+    },
+    {
+      "id": 2,
+      "prompt": "我想学 AI。",
+      "expected_output": "A concise clarification that asks only for the information needed to design a useful path.",
+      "assertions": ["Does not invent a full roadmap", "Asks about intended outcome and current baseline", "Asks about time constraints and application context", "Keeps the clarification concise"]
+    },
+    {
+      "id": 3,
+      "prompt": "I know basic SQL and need a six-week analytics engineering roadmap for a new job, ten hours per week.",
+      "expected_output": "An evidence-based six-week roadmap adapted to the stated baseline and job outcome.",
+      "assertions": ["Uses the six-week and ten-hour constraints", "Avoids reteaching basic SQL without reason", "Defines observable weekly outputs", "Includes review and adjustment rules"]
+    }
+  ]
+}

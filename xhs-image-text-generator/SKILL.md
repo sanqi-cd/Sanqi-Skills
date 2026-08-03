@@ -1,23 +1,18 @@
 ---
 name: xhs-image-text-generator
-emoji: 📦
 description: >
-  当用户想把 HTML 网页、Markdown 文章、纯文本、访谈记录、产品资料或一个主题改造成可直接发布的小红书/RedNote 图文时使用。
-  用户可能会说“帮我生成小红书图文”“把这篇文章做成小红书”“生成可发布的图文笔记”“直接生图并给我发布文案”。
-  如果用户只是想做普通摘要、公众号长文、微博/推文、视频脚本，或明确不需要小红书图文交付包，则不应触发。
-description_en: >
-  Use when the user wants to turn an HTML page, Markdown article, plain text, interview notes, product material, or topic into a publish-ready Xiaohongshu/RedNote image-text carousel.
-  Users may ask to “make this into a RedNote post”, “generate Xiaohongshu graphics”, or “create publish-ready images and caption”.
-  Do not trigger for generic summaries, long-form WeChat articles, tweets, video scripts, or cases where the user explicitly does not need a RedNote-style image-text delivery package.
-overview: >
-  这个 Skill 帮用户从素材中提炼选题、人群、卖点和视觉结构，生成一套最终可交付的小红书图文发布包。
-  核心产出包括标题、封面方案、分页脚本、可复制正文、标签、置顶评论/回复、生图提示词、图片页和发布前质量检查。
-  执行过程中会在必要时询问缺失上下文；需要生图时默认直接调用可用生图模型。
-overview_en: >
-  This Skill helps users extract the topic, audience, hook, and visual structure from source material and produce a publish-ready Xiaohongshu/RedNote carousel package.
-  The final output includes titles, cover concepts, page-by-page scripts, copy-ready caption, hashtags, pinned comments/replies, image prompts, generated image pages, and a pre-publish quality check.
-  During execution it asks for missing context only when needed; when images are required, it uses the available image generation model by default.
-platforms: Claude Code · Codex · OpenCode · OpenClaw
+  将 HTML、Markdown、文章、访谈记录、产品资料或主题转化为可直接发布的 6-10 页小红书/RedNote 图文轮播，完成内容提炼、分页、视觉设计、生图、失败重试和交付校验。适用于“小红书配图”“把文章做成卡片”“直接生图并给发布文案”等请求。Use when the user needs final carousel assets, not only prompts or generic summaries.
+license: MIT
+compatibility: Requires Python 3; URL inputs need network access, and full delivery requires image generation plus local file writing.
+metadata:
+  author: "sanqi-cd"
+  version: "1.0.0"
+  emoji: "📦"
+  description_zh: "将主题或文章转化为内容清晰、视觉统一、可直接发布的小红书图文轮播。"
+  description_en: "Turn source content into a coherent, publication-ready Xiaohongshu image carousel."
+  overview_zh: "覆盖内容提炼、分页编排、视觉设计、批量生图与交付校验。"
+  overview_en: "Cover content distillation, pagination, visual design, batch generation, and delivery validation."
+  platforms: "Claude Code · Codex · OpenCode · OpenClaw"
 ---
 
 # 小红书图文生成器
@@ -88,8 +83,9 @@ python3 scripts/normalize_input.py "<input>" --output "<normalized.md>"
    - 每个包含主标题、副标题、视觉元素、配色、构图建议
 
 4. **分页脚本**
-   - 默认 6-9 页
+   - 默认 8 页，可按素材调整为 6-10 页
    - 每页包含页面标题、页面文案、视觉建议
+   - 按 `references/carousel-schema.md` 保存为 `carousel.json`，它是页面文字的唯一数据源
 
 5. **正文**
    - 适合小红书发布的短段落
@@ -118,6 +114,14 @@ python3 scripts/normalize_input.py "<input>" --output "<normalized.md>"
 - 图片必须避免文字过密；每页只放一个主信息点
 - 生成后检查：文字是否可读、是否跑题、是否适合小红书首图/分页
 
+先生成可校验的排版基准：
+
+```bash
+python3 scripts/render_carousel_html.py "<package>/carousel.json" "<package>/cards.html"
+```
+
+`cards.html` 用于锁定逐页文字、层级和页数，也可以由浏览器逐页截图。使用生图模型时，以它作为内容基准：模型负责视觉素材，中文文字必须和 `carousel.json` 一致；发现乱码、缺字或文字溢出时应重试或改用浏览器排版截图。
+
 ### Step 5：整理最终交付包
 
 最终交付必须包含：
@@ -129,6 +133,7 @@ python3 scripts/normalize_input.py "<input>" --output "<normalized.md>"
 - `image-prompts.md`：每页生图提示词
 - 图片页：`page-01` 到 `page-08`，或工具实际返回的图片引用
 - `quality-check.md`：质量评分和发布前检查清单
+- `carousel.json`：分页文案、角色、视觉系统和事实来源
 
 可用脚本初始化交付目录：
 
@@ -137,6 +142,14 @@ python3 scripts/init_delivery_package.py "<topic>" --output-root "<output_root>"
 ```
 
 如果无法保存图片文件，也要在最终回复中逐张展示或引用生成图片，并说明哪些文本文件已保存。
+
+交付前运行：
+
+```bash
+python3 scripts/validate_delivery.py "<package>"
+```
+
+只有用户明确接受 HTML 预览而非最终图片时，才可使用 `--allow-html`。校验失败时修复后重跑，不要把只有提示词或空占位文件的目录当作完成。
 
 ## 生成原则
 
@@ -183,3 +196,5 @@ python3 scripts/init_delivery_package.py "<topic>" --output-root "<output_root>"
   当需要标题公式、封面模板、分页模板、评论引导和评分细则时读取。
 - `references/delivery.md`
   当用户要“最终可交付”“直接发小红书”“生成图片页”时读取，用于询问策略、生图策略和交付包结构。
+- `references/carousel-schema.md`
+  生成分页文案、渲染排版基准或校验交付包时读取。

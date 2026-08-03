@@ -8,6 +8,7 @@
 [![License](https://img.shields.io/badge/License-MIT-3B82F6?style=for-the-badge)](./LICENSE)
 [![Skills](https://img.shields.io/badge/Skills-5-10B981?style=for-the-badge)](#-skills)
 [![AgentSkills](https://img.shields.io/badge/AgentSkills-Standard-8B5CF6?style=for-the-badge)](https://agentskills.io)
+[![Validate skills](https://github.com/sanqi-cd/Sanqi-Skills/actions/workflows/validate.yml/badge.svg)](https://github.com/sanqi-cd/Sanqi-Skills/actions/workflows/validate.yml)
 
 ![Claude Code](https://img.shields.io/badge/Claude_Code-Skill-D97706?style=flat-square&logo=anthropic&logoColor=white)
 ![Codex](https://img.shields.io/badge/Codex-Skill-10B981?style=flat-square&logo=openai&logoColor=white)
@@ -28,11 +29,11 @@ These are tools I've tested in my own projects and found genuinely useful before
 
 | Name | One-liner | Platforms |
 |---|---|---|
-| 🧭 [**learning-path-designer**](#-learning-path-designer) | Use when the user wants a personalized learning path, study plan, skill acquisition roadma... | Claude Code · Codex · OpenCode · OpenClaw |
-| 📄 [**paper-explainer**](#-paper-explainer) | When the user uploads a paper PDF or provides an arXiv link and requests interpretation. T... | Claude Code · Codex · OpenCode · OpenClaw |
-| 📦 [**skill-builder**](#-skill-builder) | Guide vague Skill ideas into executable task cards and high-quality SKILL.md files | Claude Code · Codex · OpenCode · OpenClaw |
-| 📦 [**xhs-image-text-generator**](#-xhs-image-text-generator) | Use when the user wants to turn an HTML page, Markdown article, plain text, interview note... | Claude Code · Codex · OpenCode · OpenClaw |
-| 🎬 [**youtube-podcast-to-md**](#-youtube-podcast-to-md) | Extract YouTube podcast videos and organize into Chinese Markdown notes | Claude Code · Codex · OpenCode · OpenClaw |
+| 🧭 [**learning-path-designer**](#-learning-path-designer) | Design a personalized path from beginner to practical mastery and deliver it as an interac... | Claude Code · Codex · OpenCode · OpenClaw |
+| 📄 [**paper-explainer**](#-paper-explainer) | Explain papers accurately and accessibly while separating source claims, evidence, and int... | Claude Code · Codex · OpenCode · OpenClaw |
+| 🧰 [**skill-builder**](#-skill-builder) | Turn a rough idea into a standards-compliant, executable, maintainable, and evaluable Agen... | Claude Code · Codex · OpenCode · OpenClaw |
+| 📦 [**xhs-image-text-generator**](#-xhs-image-text-generator) | Turn source content into a coherent, publication-ready Xiaohongshu image carousel. | Claude Code · Codex · OpenCode · OpenClaw |
+| 🎙️ [**youtube-podcast-to-md**](#-youtube-podcast-to-md) | Convert YouTube transcripts into source-grounded Chinese Markdown summaries or faithful di... | Claude Code · Codex · OpenCode · OpenClaw |
 
 ---
 
@@ -48,6 +49,26 @@ Replace `<skill-name>` with the one you want, e.g. `youtube-podcast-to-md`. The 
 
 ---
 
+## ✅ Quality Gates
+
+Every skill includes consistent standard metadata, client metadata, trigger evals, and output evals. Each push and pull request checks:
+
+- `SKILL.md` metadata, directory names, and local references
+- `agents/openai.yaml` client metadata
+- Python syntax and unit tests
+- Eval schemas, README synchronization, and repository hygiene
+
+Run the complete local verification:
+
+```bash
+python3 -m unittest discover -s tests -v
+python3 scripts/validate_repository.py
+```
+
+See the [optimization plan](./docs/skill-optimization-plan.md) for release gates and [CONTRIBUTING.md](./CONTRIBUTING.md) for contribution rules.
+
+---
+
 ## ✨ Skills
 
 <!-- SKILLS_DETAIL_START -->
@@ -56,7 +77,7 @@ Replace `<skill-name>` with the one you want, e.g. `youtube-podcast-to-md`. The 
 
 ### 🧭 learning-path-designer
 
-This Skill diagnoses the user's learning goal, current level, time budget, work context, and constraints, then selects a matching methodology mix and produces an executable, verifiable, reviewable lea...
+Turn a fuzzy learning goal into an executable, verifiable, and reviewable growth map.
 
 → [SKILL.md](./learning-path-designer/SKILL.md)
 
@@ -68,7 +89,7 @@ This Skill diagnoses the user's learning goal, current level, time budget, work 
 
 ### 📄 paper-explainer
 
-Breaks down papers into Introduction / Method / Experiment / Conclusion sections, explains core ideas with layman analogies, annotates reproducibility details (datasets, hyperparameters, environment),...
+Turn an unfamiliar paper into a clear, evidence-bounded study note.
 
 → [SKILL.md](./paper-explainer/SKILL.md)
 
@@ -78,9 +99,9 @@ Breaks down papers into Introduction / Method / Experiment / Conclusion sections
 <table>
 <tr><td>
 
-### 📦 skill-builder
+### 🧰 skill-builder
 
-Turns vague Skill ideas into executable task cards through structured interviews, then generates high-quality SKILL.md files.
+Build high-quality Agent Skills from requirements through implementation and evaluation.
 
 → [SKILL.md](./skill-builder/SKILL.md)
 
@@ -92,7 +113,7 @@ Turns vague Skill ideas into executable task cards through structured interviews
 
 ### 📦 xhs-image-text-generator
 
-This Skill helps users extract the topic, audience, hook, and visual structure from source material and produce a publish-ready Xiaohongshu/RedNote carousel package. The final output includes titles, ...
+Cover content distillation, pagination, visual design, batch generation, and delivery validation.
 
 → [SKILL.md](./xhs-image-text-generator/SKILL.md)
 
@@ -102,19 +123,9 @@ This Skill helps users extract the topic, audience, hook, and visual structure f
 <table>
 <tr><td>
 
-### 🎬 youtube-podcast-to-md
+### 🎙️ youtube-podcast-to-md
 
-Extract subtitles from YouTube podcast videos and organize them into high-quality Chinese Markdown documents, optimized for English podcasts by default. Two output modes:
-- **Summary mode**: Extract core insights, key data, and structured summaries, filtering out small talk and repetition
-- **Full mode**: High-fidelity restoration of the entire conversation, preserving dialogue structure and reasoning logic...
-
-**Workflow:**
-
-1. Step 1: Confirm input parameters
-2. Step 2: Environment setup
-3. Step 3: Fetch subtitles
-4. Step 4: Clean and chunk subtitles
-5. Step 5: Model content reconstruction (core step)
+Provide a resilient and verifiable workflow from transcript retrieval to structured notes.
 
 → [SKILL.md](./youtube-podcast-to-md/SKILL.md)
 

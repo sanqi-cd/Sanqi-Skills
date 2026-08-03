@@ -1,0 +1,17 @@
+{
+  "skill_name": "learning-path-designer",
+  "cases": [
+    {"prompt": "我想从零系统学习数据分析，三个月后能独立做业务报告。", "should_trigger": true, "reason": "Needs a personalized path with a practical outcome."},
+    {"prompt": "帮我做一个每天两小时的 PMP 备考路线。", "should_trigger": true, "reason": "Exam preparation needs staged planning and constraints."},
+    {"prompt": "我会一点 Python，想转岗机器学习工程师，怎么安排半年学习？", "should_trigger": true, "reason": "Career transition requires diagnosis and a roadmap."},
+    {"prompt": "Design a 30-day roadmap for learning public speaking with weekly evidence of progress.", "should_trigger": true, "reason": "Explicit roadmap and verification request."},
+    {"prompt": "我的前端知识很零散，帮我整理成学习体系。", "should_trigger": true, "reason": "Fragmented knowledge needs a structured path."},
+    {"prompt": "每周只有周末能学，帮我规划日语 N2。", "should_trigger": true, "reason": "Personal constraints materially shape the path."},
+    {"prompt": "解释一下什么是梯度下降。", "should_trigger": false, "reason": "A single concept explanation is not a learning path."},
+    {"prompt": "推荐五本产品经理的书。", "should_trigger": false, "reason": "This is only a resource list."},
+    {"prompt": "把我明天的会议排进日历。", "should_trigger": false, "reason": "Calendar scheduling is not learning design."},
+    {"prompt": "总结这篇机器学习文章。", "should_trigger": false, "reason": "Document summarization does not need learner diagnosis."},
+    {"prompt": "给我出十道英语选择题。", "should_trigger": false, "reason": "A standalone quiz is not a complete roadmap request."},
+    {"prompt": "Python 官方文档网址是什么？", "should_trigger": false, "reason": "Simple factual lookup."}
+  ]
+}

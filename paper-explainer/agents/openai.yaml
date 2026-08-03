@@ -1,0 +1,6 @@
+interface:
+  display_name: "论文深度解读器"
+  short_description: "准确拆解论文方法、证据、实验与局限"
+  default_prompt: "使用 $paper-explainer 把这篇论文解释成有证据边界、可独立阅读的中文学习笔记。"
+policy:
+  allow_implicit_invocation: true

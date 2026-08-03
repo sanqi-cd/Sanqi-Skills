@@ -1,7 +1,6 @@
 interface:
   display_name: "个性化学习路径设计师"
   short_description: "按目标、基础和场景设计学习路径"
-  brand_color: "#2563EB"
   default_prompt: "使用 $learning-path-designer 帮我为一个具体学习目标设计可执行、可验证、可复盘的学习路径。"
 
 policy:

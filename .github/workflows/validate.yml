@@ -1,0 +1,44 @@
+name: Validate skills
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      PYTHONDONTWRITEBYTECODE: "1"
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Compile Python helpers
+        run: python3 -m compileall -q scripts */scripts
+
+      - name: Run unit tests
+        run: python3 -m unittest discover -s tests -v
+
+      - name: Install pinned Agent Skills reference validator
+        run: >-
+          python3 -m pip install --disable-pip-version-check
+          "https://github.com/agentskills/agentskills/archive/38a2ff82958afee88dadf4831509e6f7e9d8ef4e.zip#subdirectory=skills-ref"
+
+      - name: Run official Agent Skills validation
+        run: |
+          for skill in learning-path-designer paper-explainer skill-builder xhs-image-text-generator youtube-podcast-to-md; do
+            skills-ref validate "$skill"
+          done
+
+      - name: Validate repository release gates
+        run: python3 scripts/validate_repository.py

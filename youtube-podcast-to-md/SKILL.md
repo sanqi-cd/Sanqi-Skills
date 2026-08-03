@@ -1,6 +1,18 @@
 ---
 name: youtube-podcast-to-md
-description: 将 YouTube 播客视频字幕提取并整理为中文 Markdown 笔记，默认针对英文播客优化，支持「核心摘要」和「对话高保真还原」两种模式
+description: >
+  提取 YouTube 播客、访谈或长视频字幕并整理为中文 Markdown，支持核心摘要与对话高保真还原、字幕降级策略、说话人处理和时间戳溯源。用户提供 YouTube 链接并要求总结、转写、翻译、整理文章或笔记时优先使用。Use for reliable transcript-to-notes workflows with explicit source provenance and fallback handling.
+license: MIT
+compatibility: Requires Python 3, internet access, yt-dlp and youtube-transcript-api; Whisper fallback additionally requires ffmpeg and a compatible Whisper package.
+metadata:
+  author: "sanqi-cd"
+  version: "1.0.0"
+  emoji: "🎙️"
+  description_zh: "提取 YouTube 长视频字幕并生成带来源溯源的中文 Markdown 摘要或高保真对话稿。"
+  description_en: "Convert YouTube transcripts into source-grounded Chinese Markdown summaries or faithful dialogue notes."
+  overview_zh: "从字幕获取、清洗、翻译到结构化输出，提供可降级、可验证的完整流程。"
+  overview_en: "Provide a resilient and verifiable workflow from transcript retrieval to structured notes."
+  platforms: "Claude Code · Codex · OpenCode · OpenClaw"
 ---
 
 # YouTube 播客 → 中文 Markdown
@@ -15,9 +27,9 @@ description: 将 YouTube 播客视频字幕提取并整理为中文 Markdown 笔
 ## 工作流（必须按顺序执行）
 
 **全局约定：**
-- 中间文件默认放入 `${YTP2MD_TMP_DIR:-/tmp/youtube-podcast-to-md/}`
+- 临时根目录默认使用 `${YTP2MD_TMP_DIR:-/tmp/youtube-podcast-to-md/}`，每次任务必须在其中创建独立运行目录
 - 最终 Markdown 默认输出到 `${YTP2MD_OUTPUT_DIR:-$PWD}`；若用户想直接落到某个笔记库或知识库目录，请显式把 `YTP2MD_OUTPUT_DIR` 指向目标目录
-- 任务结束后自动清理 `${YTP2MD_TMP_DIR:-/tmp/youtube-podcast-to-md/}` 中的中间文件
+- 任务结束后只清理本次独立运行目录，不删除用户指定的临时根目录
 - 本技能**可任意目录下执行**，不依赖当前工作目录
 - 所有命令使用 `python3`
 - `yt-dlp` 可以直接在 PATH 中可用，或通过 `python3 -m yt_dlp` 可用；不要依赖某台机器上的固定 PATH
@@ -27,37 +39,40 @@ description: 将 YouTube 播客视频字幕提取并整理为中文 Markdown 笔
 
 从用户消息中提取：
 - **URL**：YouTube 视频链接
-- **模式**：精简版 or 完整版（用户未指定时必须询问）
+- **模式**：精简版 or 完整版；用户未指定时默认精简版，只有高保真要求明显影响成本或结果时再确认
 
 ### Step 2：环境准备
 
 ```bash
 SKILL_DIR="/absolute/path/to/youtube-podcast-to-md"
-TMP_DIR="${YTP2MD_TMP_DIR:-/tmp/youtube-podcast-to-md}"
+TMP_ROOT="${YTP2MD_TMP_DIR:-/tmp/youtube-podcast-to-md}"
 OUTPUT_DIR="${YTP2MD_OUTPUT_DIR:-$PWD}"
 
-mkdir -p "$TMP_DIR" "$OUTPUT_DIR"
-python3 -m pip install --quiet yt-dlp youtube-transcript-api
+mkdir -p "$TMP_ROOT" "$OUTPUT_DIR"
+TMP_DIR="$(mktemp -d "$TMP_ROOT/run.XXXXXX")"
+trap 'rm -rf -- "$TMP_DIR"' EXIT
+
+python3 -m venv "$TMP_ROOT/.venv"
+PYTHON="$TMP_ROOT/.venv/bin/python"
+"$PYTHON" -m pip install --quiet -r "$SKILL_DIR/requirements.txt"
 ```
 
 若需 Whisper 兜底，额外安装以下其一：
 
 ```bash
-python3 -m pip install --quiet faster-whisper
-# 或
-python3 -m pip install --quiet openai-whisper
+"$PYTHON" -m pip install --quiet -r "$SKILL_DIR/requirements-whisper.txt"
 ```
 
-若遇到权限问题可改用 `python3 -m pip install --user ...`；在虚拟环境中则无需额外参数。
+Whisper 还要求系统可调用 `ffmpeg`。安装失败时报告缺失依赖，不要静默退回不可靠结果。
 
 ### Step 3：获取字幕
 
-运行 `python3 "$SKILL_DIR/scripts/fetch_transcript.py" <URL> "$TMP_DIR"`，脚本按优先级自动选择：
+运行 `"$PYTHON" "$SKILL_DIR/scripts/fetch_transcript.py" <URL> "$TMP_DIR"`，脚本按优先级自动选择：
 
 1. YouTube 手动上传的英文字幕（质量最高）
 2. YouTube 自动生成的英文字幕
 3. YouTube 上其他可用字幕（自动适配）
-4. 若以上均不可用 → 运行 `python3 "$SKILL_DIR/scripts/fetch_with_whisper.py" <URL> "$TMP_DIR"` 使用 Whisper 离线转录
+4. 若以上均不可用 → 运行 `"$PYTHON" "$SKILL_DIR/scripts/fetch_with_whisper.py" <URL> "$TMP_DIR"` 使用 Whisper 离线转录
 
 补充说明：
 - `fetch_transcript.py` 会优先拿英文字幕；如果只有其他语言字幕，会继续返回该语言字幕
@@ -69,7 +84,7 @@ python3 -m pip install --quiet openai-whisper
 
 ### Step 4：字幕清洗与分块
 
-运行 `python3 "$SKILL_DIR/scripts/clean_transcript.py" "$TMP_DIR/transcript_raw.txt" "$TMP_DIR"`，执行：
+运行 `"$PYTHON" "$SKILL_DIR/scripts/clean_transcript.py" "$TMP_DIR/transcript_raw.txt" "$TMP_DIR"`，执行：
 
 - 去除 HTML 标签和噪音标记（`[Music]`、`[Applause]` 等）
 - 合并被错误切断的句子
@@ -119,12 +134,21 @@ mkdir -p "$YTP2MD_OUTPUT_DIR"
 
 （特殊字符 `/ \ : * ? " < > |` 替换为 `_`）
 
+文档头部必须记录 `transcript_meta.json` 中的字幕来源和字幕语言。保存后运行：
+
+```bash
+"$PYTHON" "$SKILL_DIR/scripts/validate_output.py" "$OUTPUT_DIR/<文件名>.md" --mode summary
+```
+
+完整版改用 `--mode full`。校验失败时回修并重跑；来源不可访问时交付明确的失败报告，不生成虚构笔记。
+
 ### Step 7：清理中间文件并呈现结果
 
 删除中间文件目录：
 
 ```bash
-rm -rf "$TMP_DIR"
+rm -rf -- "$TMP_DIR"
+trap - EXIT
 ```
 
 告知用户：
@@ -152,5 +176,6 @@ rm -rf "$TMP_DIR"
 | `scripts/fetch_transcript.py` | 字幕获取（youtube-transcript-api + yt-dlp） | Step 3 时读取并执行 |
 | `scripts/fetch_with_whisper.py` | Whisper 离线转录兜底 | Step 3 备选方案 |
 | `scripts/clean_transcript.py` | 字幕清洗与自动分块 | Step 4 时读取并执行 |
+| `scripts/validate_output.py` | 最终 Markdown 结构与溯源检查 | Step 6 时执行 |
 | `references/prompt_templates.md` | 模型内容重建 prompt 模板 | Step 5 时读取 |
 | `references/output_format.md` | Markdown 输出格式规范 | Step 6 时读取 |

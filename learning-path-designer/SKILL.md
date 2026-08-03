@@ -1,21 +1,18 @@
 ---
 name: learning-path-designer
-emoji: 🧭
 description: >
-  当用户想学习某个领域、技能、工具、课程、考试、证书、职业能力或知识体系，并需要个性化学习路径、学习计划、学习方法论、学习路线、学习策略、复盘调整时使用。
-  典型触发："帮我设计学习路径""我想系统学习 AI/编程/数据分析""给我一个 30 天学习计划""帮我规划转岗学习路线""怎么备考这个证书"。
-  不要用于：只问单个知识点解释、只要资料清单、只要普通日程安排、或不需要个性化诊断的简单摘要。
-description_en: >
-  Use when the user wants a personalized learning path, study plan, skill acquisition roadmap, exam strategy, career learning plan, or methodology-based guidance for learning a topic, field, tool, skill, or body of knowledge.
-  Users may ask to "design a learning path", "create a 30-day study plan", "plan a career transition roadmap", or "help me learn AI/programming/data analysis systematically".
-  Do not trigger for single concept explanations, simple resource lists, generic scheduling, or summaries that do not need personalized learning diagnosis.
-overview: >
-  这个 Skill 先诊断用户的学习目标、基础、时间、职业场景和约束，再选择最匹配的学习方法论组合，生成可执行、可验证、可复盘的个性化学习路径。
-  完整输出优先生成一个单文件 HTML 学习成长地图，包含起点终点、阶段站点、知识树、任务树、行动卡、产出物、通关标准和复盘机制。
-overview_en: >
-  This Skill diagnoses the user's learning goal, current level, time budget, work context, and constraints, then selects a matching methodology mix and produces an executable, verifiable, reviewable learning path.
-  Full outputs prioritize a single-file HTML growth map with start/end states, stage stations, knowledge tree, task tree, action cards, deliverables, pass criteria, and review loops.
-platforms: Claude Code · Codex · OpenCode · OpenClaw
+  根据学习目标、当前基础、时间约束和应用场景，设计从入门到实际运用的个性化学习路径，并交付可勾选、可保存进度的单文件 HTML 成长地图。适用于“规划学习路线”“从零掌握一项技能”“备考证书”“规划转岗学习”等请求。Use when a learner needs a personalized, executable roadmap with milestones, practice tasks, evidence, and review loops rather than a generic resource list or schedule.
+license: MIT
+compatibility: Requires Python 3 for deterministic rendering and an agent that can write files; a browser is recommended for visual verification.
+metadata:
+  author: "sanqi-cd"
+  version: "1.0.0"
+  emoji: "🧭"
+  description_zh: "根据目标、基础、约束和应用场景设计个性化学习路径，并输出可交互的 HTML 成长地图。"
+  description_en: "Design a personalized path from beginner to practical mastery and deliver it as an interactive HTML growth map."
+  overview_zh: "将模糊的学习目标转化为可执行、可验证、可复盘的成长地图。"
+  overview_en: "Turn a fuzzy learning goal into an executable, verifiable, and reviewable growth map."
+  platforms: "Claude Code · Codex · OpenCode · OpenClaw"
 ---
 
 # 个性化学习路径设计师
@@ -161,7 +158,14 @@ platforms: Claude Code · Codex · OpenCode · OpenClaw
 - 学习装备：推荐方法、工具、资料类型，以及现在不建议做的事。
 - 复盘与升级：太难、太简单、坚持不下去、想加速时如何调整。
 
-如果当前环境可以创建文件，生成一个独立 HTML 文件并告知用户路径；如果不能创建文件，则输出完整 HTML 代码块。生成文件时优先放在当前工作区的 `learning-path-outputs/` 目录，不要写进 Skill 包目录。HTML 展示规范见 `references/html-growth-map-template.md`。
+如果当前环境可以创建文件，先按 `references/learning-plan-schema.md` 写出结构化 `learning-plan.json`，再运行：
+
+```bash
+python3 scripts/render_growth_map.py learning-plan.json learning-path-outputs/growth-map.html
+python3 scripts/validate_growth_map.py learning-path-outputs/growth-map.html
+```
+
+校验失败时先修复 JSON 或生成结果并重跑，不得交付未通过校验的文件。不能创建文件时才输出完整 HTML 代码块。生成文件必须放在当前工作区的 `learning-path-outputs/`，不要写进 Skill 包目录。视觉设计细则见 `references/html-growth-map-template.md`。
 
 ### 9. 建立复盘机制
 
@@ -220,4 +224,5 @@ platforms: Claude Code · Codex · OpenCode · OpenClaw
 - 需要补问或精确诊断时，读取 `references/diagnosis-schema.md`。
 - 需要稳定输出格式时，读取 `references/output-templates.md`。
 - 需要生成动态直观的 HTML 学习成长地图时，读取 `references/html-growth-map-template.md`。
+- 需要生成可校验的路径数据时，读取 `references/learning-plan-schema.md`。
 - 需要参考成品效果时，读取 `references/examples.md`。

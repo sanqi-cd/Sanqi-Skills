@@ -1,0 +1,6 @@
+interface:
+  display_name: "YouTube 播客笔记器"
+  short_description: "将长视频字幕整理为中文 Markdown 笔记"
+  default_prompt: "使用 $youtube-podcast-to-md 提取这个 YouTube 视频的字幕，并生成带时间戳溯源的中文 Markdown 笔记。"
+policy:
+  allow_implicit_invocation: true

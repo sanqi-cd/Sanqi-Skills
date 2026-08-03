@@ -61,10 +61,13 @@ class SyncReadmeTest(unittest.TestCase):
 name: skill-builder
 description: >
   当用户想创建一个新的 Skill 但需求模糊、不完整或过于宽泛时使用。
-description_en: >
-  Guide vague Skill ideas into executable task cards and high-quality SKILL.md files.
-overview_en: >
-  Turns vague Skill ideas into executable task cards through structured interviews.
+metadata:
+  emoji: "🧰"
+  description_zh: "将模糊的 Skill 想法收敛为可执行任务卡。"
+  description_en: "Guide vague Skill ideas into executable task cards and high-quality SKILL.md files."
+  overview_zh: "把模糊的 Skill 想法收敛为可执行任务卡。"
+  overview_en: "Turns vague Skill ideas into executable task cards through structured interviews."
+  platforms: "Claude Code · Codex · OpenCode · OpenClaw"
 ---
 
 # Skill Builder
@@ -118,6 +121,26 @@ description: 将 YouTube 播客视频字幕提取并整理为中文 Markdown 笔
             )
             self.assertIn("### 🎬 youtube-podcast-to-md", en_content)
             self.assertIn("Existing English detail body.", en_content)
+
+            self.assertFalse(sync_readme.sync_readmes(root, dry_run=True))
+
+    def test_parse_frontmatter_supports_standard_metadata(self):
+        parsed = sync_readme.parse_frontmatter(
+            """---
+name: demo-skill
+description: >
+  Use for a demo request.
+license: MIT
+metadata:
+  emoji: "🧪"
+  version: "1.0.0"
+---
+"""
+        )
+
+        self.assertEqual(parsed["name"], "demo-skill")
+        self.assertEqual(parsed["description"], "Use for a demo request.")
+        self.assertEqual(parsed["metadata"]["emoji"], "🧪")
 
 
 if __name__ == "__main__":

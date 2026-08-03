@@ -1,24 +1,18 @@
 ---
 name: paper-explainer
-emoji: 📄
 description: >
-  当用户上传论文 PDF 或提供 arXiv 链接并请求解读时使用。
-  触发："帮我解读这篇论文""解读论文""解读下这篇 paper""论文解读"。
-  不要用于：事实查询（"这篇论文发在哪""作者是谁"）、非学术论文（新闻/博客/报道）、
-  内容不足 2 页的短文。
-description_en: >
-  When the user uploads a paper PDF or provides an arXiv link and requests interpretation.
-  Triggers: "explain this paper" "paper summary" "summarize this paper" "break down this paper".
-  Do NOT use for: factual queries ("where was this paper published" "who is the author"),
-  non-academic content (news / blog posts), content shorter than 2 pages.
-overview: >
-  按「引言/方法/实验/结论」拆解论文，用通俗类比解读核心思想，标注可复现细节
-  （数据集、超参、环境），输出结构化 Markdown 笔记。
-overview_en: >
-  Breaks down papers into Introduction / Method / Experiment / Conclusion sections,
-  explains core ideas with layman analogies, annotates reproducibility details
-  (datasets, hyperparameters, environment), and outputs a structured Markdown note.
-platforms: Claude Code · Codex · OpenCode · OpenClaw
+  用通俗但准确的语言深度解释学术论文，覆盖问题背景、方法、公式、实验、创新、局限和相关工作，并输出可独立阅读的 Markdown 学习笔记。适用于论文精读、方法拆解、实验分析和跨领域理解；若证据不完整，必须继续获取全文或明确证据边界。Use for rigorous paper explanations that distinguish source claims, evidence, and interpretation instead of treating an abstract as the whole paper.
+license: MIT
+compatibility: Requires PDF or local file reading; internet access is needed when the input is an arXiv link, DOI, title, or incomplete excerpt.
+metadata:
+  author: "sanqi-cd"
+  version: "1.0.0"
+  emoji: "📄"
+  description_zh: "准确、通俗地解释论文的方法、公式、实验、创新与局限，并明确证据边界。"
+  description_en: "Explain papers accurately and accessibly while separating source claims, evidence, and interpretation."
+  overview_zh: "把陌生论文讲成有主线、有证据边界、能真正学会的研究笔记。"
+  overview_en: "Turn an unfamiliar paper into a clear, evidence-bounded study note."
+  platforms: "Claude Code · Codex · OpenCode · OpenClaw"
 ---
 
 # 论文解读
@@ -59,6 +53,13 @@ platforms: Claude Code · Codex · OpenCode · OpenClaw
 
 **产出**：章节映射表 + 每个章节的核心要点速记
 
+先判断论文类型，再调整阅读重点：
+
+- 算法/模型论文：目标函数、模块关系、计算代价、消融和基线公平性。
+- 系统论文：工作负载、系统边界、吞吐/延迟、资源开销和故障条件。
+- 实证/社会科学论文：研究设计、样本、变量、效应量、稳健性和外推范围。
+- 综述论文：检索范围、分类框架、覆盖缺口和结论时效性。
+
 ### Step 3: 逐章解读
 
 对每个章节完成以下四项任务：
@@ -67,6 +68,8 @@ platforms: Claude Code · Codex · OpenCode · OpenClaw
 **B. 通俗类比**：至少给 1 个生活化类比帮助理解。如"注意力机制就像一个读者在翻译句子时，每写一个词都会回看原文中最相关的部分"
 **C. 术语解释**：本章首次出现的专业术语给出简明解释（一句话），后续出现不重复
 **D. 可复现标注**（重点在方法&实验章节）：标注数据集名称/规模、超参设置、硬件环境、关键实现细节。如缺信息则注明"论文未提及"
+
+所有关键结论使用 `作者陈述`、`论文证据`、`解读` 或 `未知` 标签，并附 `[p. 7]`、`[§3.2]`、`[Figure 4]`、`[Table 2]` 等定位符。不得把自己的推断写成作者结论。
 
 **产出**：四个章节的解读草稿，每章含 A/B/C/D 四项
 
@@ -79,6 +82,9 @@ platforms: Claude Code · Codex · OpenCode · OpenClaw
 - [ ] 结论章节区分了"作者声称"与"客观实验结果"
 - [ ] 首次出现的术语有简明解释
 - [ ] 实验局限性已标注（如有）
+- [ ] 关键结论有来源定位，且作者陈述、论文证据和解读已分开
+
+按 `references/quality-rubric.md` 评分；总分低于 10/12 或“证据完整性”为 0 时必须回修。
 
 **产出**：自检通过的解读终稿
 
@@ -90,6 +96,9 @@ platforms: Claude Code · Codex · OpenCode · OpenClaw
 # [论文标题]
 
 **作者**: [作者] | **发表**: [会议/期刊, 年份] | **链接**: [arXiv/DOI]
+
+## 来源与证据边界
+[使用了全文/摘要/局部页面；缺失、OCR 不确定或无法访问的部分]
 
 ## 一句话速读
 [不超过 80 字的核心贡献概括]
@@ -124,6 +133,14 @@ platforms: Claude Code · Codex · OpenCode · OpenClaw
 
 **产出**：符合格式的结构化 Markdown 笔记
 
+保存文件后运行：
+
+```bash
+python3 scripts/validate_note.py "<note.md>"
+```
+
+校验失败时回修并重跑。若因源材料本身缺失而无法满足定位要求，在“来源与证据边界”中明确说明，并向用户报告未通过项，不得伪造定位符。
+
 ## 质量标准
 
 - [ ] 每个章节（引言/方法/实验/结论）至少包含 1 个通俗类比
@@ -131,6 +148,8 @@ platforms: Claude Code · Codex · OpenCode · OpenClaw
 - [ ] 结论明确区分"作者声称"与"客观实验结果"
 - [ ] 首次出现的专业术语有括号内简明解释
 - [ ] 实验局限性已标注
+- [ ] 至少 3 个关键结论附有页面、章节、图表或公式定位符
+- [ ] 使用标签区分作者陈述、论文证据、解读和未知信息
 - [ ] 不直接翻译摘要充当解读，不堆砌术语
 
 ## 最终反馈

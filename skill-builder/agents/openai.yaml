@@ -1,0 +1,6 @@
+interface:
+  display_name: "Agent Skill 构建器"
+  short_description: "设计、实现并评测高质量 Agent Skill"
+  default_prompt: "使用 $skill-builder 把这个工作流构建成符合规范、可执行、可维护并可评测的 Agent Skill。"
+policy:
+  allow_implicit_invocation: true
