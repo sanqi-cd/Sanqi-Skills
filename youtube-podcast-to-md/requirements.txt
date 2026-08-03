@@ -1,2 +1,2 @@
-yt-dlp>=2025.1
+yt-dlp>=2026.7.4
 youtube-transcript-api>=1.2.4,<2

@@ -5,9 +5,17 @@ updates:
     schedule:
       interval: monthly
     open-pull-requests-limit: 5
+    groups:
+      github-actions:
+        patterns:
+          - "*"
 
   - package-ecosystem: pip
     directory: /youtube-podcast-to-md
     schedule:
       interval: monthly
     open-pull-requests-limit: 5
+    groups:
+      youtube-runtime:
+        patterns:
+          - "*"
