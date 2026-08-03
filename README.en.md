@@ -71,36 +71,6 @@ See [CONTRIBUTING.md](./CONTRIBUTING.md) for quality gates and contribution rule
 
 ---
 
-## 🖼️ Real Outputs
-
-These examples are produced by the repository's deterministic renderers. Each directory includes structured source data and a standalone HTML file for inspection and reuse.
-
-### 8-page Xiaohongshu carousels
-
-<table>
-<tr>
-<td width="50%"><img src="./examples/xhs-image-text-generator/ai-morning-workflow/preview.png" alt="8-page AI morning workflow carousel preview"><br><strong>AI morning workflow</strong><br><a href="./examples/xhs-image-text-generator/ai-morning-workflow/carousel.json">Source data</a> · <a href="./examples/xhs-image-text-generator/ai-morning-workflow/cards.html">Standalone HTML</a></td>
-<td width="50%"><img src="./examples/xhs-image-text-generator/knowledge-management/preview.png" alt="8-page knowledge management carousel preview"><br><strong>Knowledge management for beginners</strong><br><a href="./examples/xhs-image-text-generator/knowledge-management/carousel.json">Source data</a> · <a href="./examples/xhs-image-text-generator/knowledge-management/cards.html">Standalone HTML</a></td>
-</tr>
-</table>
-
-### Interactive HTML growth maps
-
-<table>
-<tr>
-<td width="50%"><img src="./examples/learning-path-designer/ai-content-creator/preview.png" alt="30-day AI content creator growth map"><br><strong>AI content creator · 30 days</strong><br><a href="./examples/learning-path-designer/ai-content-creator/learning-plan.json">Source data</a> · <a href="./examples/learning-path-designer/ai-content-creator/growth-map.html">Interactive HTML</a></td>
-<td width="50%"><img src="./examples/learning-path-designer/data-analyst-transition/preview.png" alt="8-week data analyst transition growth map"><br><strong>Operations to data analyst · 8 weeks</strong><br><a href="./examples/learning-path-designer/data-analyst-transition/learning-plan.json">Source data</a> · <a href="./examples/learning-path-designer/data-analyst-transition/growth-map.html">Interactive HTML</a></td>
-</tr>
-</table>
-
-Regenerate the HTML and screenshots:
-
-```bash
-python3 scripts/capture_examples.py
-```
-
----
-
 ## ✨ Skills
 
 <!-- SKILLS_DETAIL_START -->
