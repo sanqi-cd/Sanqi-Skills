@@ -1,72 +1,9 @@
-#!/usr/bin/env python3
-"""Render a structured learning plan JSON file as a standalone HTML growth map."""
-
-from __future__ import annotations
-
-import argparse
-import html
-import json
-from pathlib import Path
-
-
-REQUIRED_TEXT = ("title", "learner", "start_state", "goal_state", "time_budget", "today_win")
-REQUIRED_LISTS = (
-    "methodologies",
-    "knowledge_tree",
-    "task_tree",
-    "final_deliverables",
-    "review_rules",
-)
-REQUIRED_PHASE_TEXT = ("id", "title", "duration", "ability", "deliverable", "pass_criteria")
-
-
-def validate_plan(plan: dict) -> list[str]:
-    errors: list[str] = []
-    for key in REQUIRED_TEXT:
-        if not isinstance(plan.get(key), str) or not plan[key].strip():
-            errors.append(f"{key} must be a non-empty string")
-
-    phases = plan.get("phases")
-    if not isinstance(phases, list) or not 4 <= len(phases) <= 6:
-        errors.append("phases must contain 4-6 items")
-        phases = []
-    ids: set[str] = set()
-    for index, phase in enumerate(phases, 1):
-        if not isinstance(phase, dict):
-            errors.append(f"phase {index} must be an object")
-            continue
-        for key in REQUIRED_PHASE_TEXT:
-            if not isinstance(phase.get(key), str) or not phase[key].strip():
-                errors.append(f"phase {index}.{key} must be a non-empty string")
-        phase_id = phase.get("id")
-        if isinstance(phase_id, str):
-            if phase_id in ids:
-                errors.append(f"phase id {phase_id!r} is duplicated")
-            ids.add(phase_id)
-        tasks = phase.get("tasks")
-        if not isinstance(tasks, list) or not tasks or not all(
-            isinstance(item, str) and item.strip() for item in tasks
-        ):
-            errors.append(f"phase {index}.tasks must contain non-empty strings")
-
-    for key in REQUIRED_LISTS:
-        value = plan.get(key)
-        if not isinstance(value, list) or not value or not all(
-            isinstance(item, str) and item.strip() for item in value
-        ):
-            errors.append(f"{key} must contain non-empty strings")
-    return errors
-
-
-def render(plan: dict) -> str:
-    data = json.dumps(plan, ensure_ascii=False).replace("<", "\\u003c")
-    title = html.escape(plan["title"])
-    template = """<!doctype html>
+<!doctype html>
 <html lang="zh-CN">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>__TITLE__</title>
+<title>8周从运营表格到独立数据分析项目</title>
 <style>
 :root{--ink:#17211b;--muted:#66706a;--paper:#f5f7f3;--panel:#fff;--line:#d8ded8;--green:#26734d;--yellow:#f2c94c;--blue:#2869a8;--red:#c84a43}
 *{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.65 system-ui,-apple-system,"PingFang SC",sans-serif;letter-spacing:0}
@@ -84,7 +21,7 @@ button,input{font:inherit}.shell{width:min(1120px,calc(100% - 32px));margin:0 au
 </style>
 </head>
 <body><main class="shell" id="app"></main>
-<script id="learning-plan-data" type="application/json">__DATA__</script>
+<script id="learning-plan-data" type="application/json">{"title": "8周从运营表格到独立数据分析项目", "learner": "熟悉 Excel、零编程基础的运营专员", "start_state": "能制作常规报表，但依赖手工清洗和经验判断", "goal_state": "能用 SQL 与 Python完成清洗、分析和可解释的业务汇报", "time_budget": "工作日每天 1 小时，周末 3 小时，共 8 周", "methodologies": ["项目制学习", "刻意练习", "检索练习", "案例复盘"], "knowledge_tree": ["指标口径与业务问题", "SQL 查询与数据模型", "Python 数据清洗", "探索性分析", "可视化与结论表达"], "task_tree": ["定义业务问题", "抽取并检查数据", "清洗异常数据", "完成指标分析", "制作汇报并接受反馈"], "phases": [{"id": "metrics", "title": "从业务问题到指标", "duration": "第 1 周", "ability": "把模糊运营问题改写为可计算的指标和假设", "tasks": ["拆解一个真实业务问题", "建立指标字典", "画出数据来源与口径关系"], "deliverable": "业务问题树与指标字典", "pass_criteria": "同事能根据定义复算三个核心指标"}, {"id": "sql", "title": "用SQL拿到可信数据", "duration": "第 2-3 周", "ability": "独立完成筛选、聚合、关联和分组分析", "tasks": ["完成 30 道递进查询练习", "复现一张运营周报", "为查询增加空值与重复检查"], "deliverable": "可复用 SQL 查询集与数据质量清单", "pass_criteria": "换一份同结构数据仍能正确生成周报"}, {"id": "python", "title": "用Python清洗和探索", "duration": "第 4-5 周", "ability": "使用 pandas 完成合并、清洗、统计和异常定位", "tasks": ["读取并合并三份表格", "处理缺失值和异常值", "输出探索性分析图表"], "deliverable": "可重复运行的数据清洗与探索脚本", "pass_criteria": "从原始文件到分析表可一键重跑且无手工修改"}, {"id": "project", "title": "完成业务分析项目", "duration": "第 6-8 周", "ability": "把分析结果转化为有边界、可行动的业务建议", "tasks": ["选择一个留存或转化问题", "完成分析、可视化和结论", "邀请一位业务同事评审并修改"], "deliverable": "完整分析项目、汇报稿与复盘记录", "pass_criteria": "10 分钟内讲清问题、证据、限制和下一步行动"}], "final_deliverables": ["业务问题树", "指标字典", "SQL 查询集", "Python 清洗脚本", "分析项目报告", "作品复盘"], "today_win": "选一张正在使用的运营报表，为三个指标补上定义、时间窗口和数据来源", "review_rules": ["练习卡住 30 分钟先缩小数据集再定位问题", "每周随机重做两道旧题进行检索练习", "脚本只能在本人电脑运行时补充环境和输入说明", "结论无法落到业务动作时回到原始问题重新拆解"]}</script>
 <script>
 const plan=JSON.parse(document.getElementById('learning-plan-data').textContent);const app=document.getElementById('app');
 const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -96,29 +33,4 @@ function taskId(phaseIndex,taskIndex){return `${plan.phases[phaseIndex].id}-${ta
 function updateProgress(){const all=[];plan.phases.forEach((p,pi)=>p.tasks.forEach((_,ti)=>all.push(taskId(pi,ti))));const done=all.filter(id=>saved[id]).length;document.getElementById('globalBar').style.width=(all.length?done/all.length*100:0)+'%';document.getElementById('globalProgress').textContent=`${done} / ${all.length} 项`;const phase=plan.phases[activePhase];const phaseDone=phase.tasks.filter((_,ti)=>saved[taskId(activePhase,ti)]).length;document.getElementById('phaseBar').style.width=(phase.tasks.length?phaseDone/phase.tasks.length*100:0)+'%';document.getElementById('phaseProgress').textContent=`${phaseDone} / ${phase.tasks.length} 项`;try{localStorage.setItem(storageKey,JSON.stringify(saved))}catch(e){}}
 function renderTasks(){const tabs=document.getElementById('phaseTabs');tabs.innerHTML=plan.phases.map((p,i)=>`<button class="phase-tab ${i===activePhase?'active':''}" data-phase="${i}" type="button">${esc(p.duration)}</button>`).join('');const phase=plan.phases[activePhase];document.getElementById('taskList').innerHTML=phase.tasks.map((task,i)=>{const id=taskId(activePhase,i);return `<label class="task ${saved[id]?'done':''}"><input type="checkbox" data-id="${esc(id)}" ${saved[id]?'checked':''}><span>${esc(task)}</span></label>`}).join('');tabs.querySelectorAll('button').forEach(button=>button.addEventListener('click',()=>{activePhase=Number(button.dataset.phase);renderTasks()}));document.querySelectorAll('.task input').forEach(box=>box.addEventListener('change',()=>{saved[box.dataset.id]=box.checked;box.closest('.task').classList.toggle('done',box.checked);updateProgress()}));updateProgress()}
 document.getElementById('reviewToggle').addEventListener('click',event=>{const review=document.getElementById('review');review.classList.toggle('open');event.currentTarget.textContent=review.classList.contains('open')?'收起复盘规则':'显示复盘规则'});renderStage();renderTasks();
-</script></body></html>"""
-    return template.replace("__TITLE__", title).replace("__DATA__", data)
-
-
-def main() -> int:
-    parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("plan", type=Path, help="Learning plan JSON file")
-    parser.add_argument("output", type=Path, help="Destination HTML file")
-    args = parser.parse_args()
-    try:
-        plan = json.loads(args.plan.read_text(encoding="utf-8"))
-    except (OSError, json.JSONDecodeError) as exc:
-        parser.error(f"cannot read plan JSON: {exc}")
-    if not isinstance(plan, dict):
-        parser.error("plan JSON root must be an object")
-    errors = validate_plan(plan)
-    if errors:
-        parser.error("invalid plan: " + "; ".join(errors))
-    args.output.parent.mkdir(parents=True, exist_ok=True)
-    args.output.write_text(render(plan), encoding="utf-8")
-    print(args.output.resolve())
-    return 0
-
-
-if __name__ == "__main__":
-    raise SystemExit(main())
+</script></body></html>

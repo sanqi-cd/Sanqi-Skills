@@ -57,6 +57,8 @@ class XhsToolsTest(unittest.TestCase):
         output = render_carousel.render(data)
         self.assertEqual(output.count('<article class="card'), 6)
         self.assertNotIn("http://", output)
+        self.assertIn("container-type:inline-size", output)
+        self.assertIn("cqw", output)
 
     def test_delivery_allows_explicit_html_preview(self):
         with tempfile.TemporaryDirectory() as tmp:

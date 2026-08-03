@@ -1,0 +1,85 @@
+{
+  "topic": "小白知识管理",
+  "audience": "收藏很多却用不起来的学习者",
+  "angle": "先建立输出闭环，再决定要不要搭复杂系统",
+  "visual_system": {
+    "style": "editorial notebook",
+    "background": "#EEF4F8",
+    "foreground": "#172033",
+    "accent": "#D9573F"
+  },
+  "pages": [
+    {
+      "number": 1,
+      "role": "cover",
+      "title": "第一次做知识管理，别先搭系统",
+      "subtitle": "一个能用起来的闭环，比完美分类更重要",
+      "bullets": [],
+      "visual_note": "凌乱文件夹与一条清晰闭环形成反差",
+      "source_note": ""
+    },
+    {
+      "number": 2,
+      "role": "pain",
+      "title": "收藏不等于拥有知识",
+      "subtitle": "资料越来越多，真正要用时仍然找不到",
+      "bullets": ["看过但说不清", "记过但搜不到", "分类很多却没有作品"],
+      "visual_note": "堆叠收藏图标与空白输出区形成对比",
+      "source_note": ""
+    },
+    {
+      "number": 3,
+      "role": "overview",
+      "title": "只保留4个动作",
+      "subtitle": "捕捉、压缩、连接、输出",
+      "bullets": ["先进入同一个收件箱", "用自己的话压缩", "链接到真实问题", "一周至少输出一次"],
+      "visual_note": "四节点循环路径，输出再反馈到捕捉",
+      "source_note": ""
+    },
+    {
+      "number": 4,
+      "role": "step",
+      "title": "捕捉：只收与当前问题有关的",
+      "subtitle": "没有用途的资料，先不进入系统",
+      "bullets": ["它解决什么问题", "我会在哪个场景用", "两周内是否会再次打开"],
+      "visual_note": "漏斗筛选大量资料，仅留下少量卡片",
+      "source_note": ""
+    },
+    {
+      "number": 5,
+      "role": "step",
+      "title": "压缩：每条笔记只写3件事",
+      "subtitle": "结论、证据、下一步行动",
+      "bullets": ["一句话讲清结论", "保留出处或案例", "写下要验证的动作"],
+      "visual_note": "一张三分区笔记卡，信息密度克制",
+      "source_note": ""
+    },
+    {
+      "number": 6,
+      "role": "example",
+      "title": "连接：按问题找知识，不按学科搬家",
+      "subtitle": "同一条笔记可以服务多个真实项目",
+      "bullets": ["如何提高写作效率", "如何设计学习路径", "如何复盘内容表现"],
+      "visual_note": "中心笔记连接到三个项目场景",
+      "source_note": ""
+    },
+    {
+      "number": 7,
+      "role": "warning",
+      "title": "别把整理当成学习",
+      "subtitle": "文件夹、标签和插件都不能替代输出",
+      "bullets": ["分类不超过两层", "每周清空一次收件箱", "系统只在用不顺时升级"],
+      "visual_note": "复杂系统被划掉，突出简单规则",
+      "source_note": ""
+    },
+    {
+      "number": 8,
+      "role": "cta",
+      "title": "今天用一条笔记完成闭环",
+      "subtitle": "从最近收藏里选一条，写成可发布的观点",
+      "bullets": ["用自己的话复述", "补一个真实案例", "发给一个具体的人"],
+      "visual_note": "一条笔记从输入走向公开输出",
+      "source_note": ""
+    }
+  ]
+}

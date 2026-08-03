@@ -10,6 +10,7 @@ Thanks for helping improve Sanqi Skills. Keep contributions focused on a concret
 - Keep `SKILL.md` concise and link directly to any scripts, references, assets, or evals it needs.
 - Add `agents/openai.yaml`, at least 12 balanced trigger cases, and at least 3 output eval cases.
 - Test deterministic scripts with normal and failure inputs. Never commit credentials, generated outputs, caches, or operating-system files.
+- Keep public examples deterministic. When a renderer or example source changes, run `python3 scripts/capture_examples.py` and review every refreshed screenshot.
 
 ## Verification
 

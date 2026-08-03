@@ -1,0 +1,32 @@
+name: New Skill proposal / 新 Skill 提案
+description: Propose a reusable Agent Skill backed by concrete examples.
+title: "[Skill proposal]: "
+labels: [enhancement]
+body:
+  - type: input
+    id: name
+    attributes:
+      label: Proposed Skill name
+      placeholder: lowercase-hyphenated-name
+    validations:
+      required: true
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem and target users
+      description: Explain the repeated workflow this Skill should solve and for whom.
+    validations:
+      required: true
+  - type: textarea
+    id: triggers
+    attributes:
+      label: Positive and negative trigger examples
+      placeholder: Include requests that should trigger and nearby requests that should not.
+    validations:
+      required: true
+  - type: textarea
+    id: outputs
+    attributes:
+      label: Expected deliverables and quality checks
+    validations:
+      required: true

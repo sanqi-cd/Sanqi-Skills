@@ -32,6 +32,9 @@ def sample_plan():
         "goal_state": "能完成独立作品",
         "time_budget": "每周 6 小时",
         "methodologies": ["项目制学习"],
+        "knowledge_tree": ["核心概念", "常见模式"],
+        "task_tree": ["完成练习", "交付作品"],
+        "final_deliverables": ["知识地图", "独立作品"],
         "phases": [
             {
                 "id": f"phase-{index}",
@@ -56,11 +59,21 @@ class LearningPathToolsTest(unittest.TestCase):
         output = render_growth_map.render(plan)
         self.assertEqual(validate_growth_map.validate_html(output), [])
         self.assertIn("四周学习路径", output)
+        self.assertIn("全周期行动卡", output)
+        self.assertIn("成果展台", output)
 
     def test_rejects_too_few_phases(self):
         plan = sample_plan()
         plan["phases"] = plan["phases"][:2]
         self.assertIn("phases must contain 4-6 items", render_growth_map.validate_plan(plan))
+
+    def test_rejects_missing_learning_trees(self):
+        plan = sample_plan()
+        del plan["knowledge_tree"]
+        self.assertIn(
+            "knowledge_tree must contain non-empty strings",
+            render_growth_map.validate_plan(plan),
+        )
 
     def test_cli_round_trip(self):
         with tempfile.TemporaryDirectory() as tmp:

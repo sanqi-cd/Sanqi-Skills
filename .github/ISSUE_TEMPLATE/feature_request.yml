@@ -1,0 +1,36 @@
+name: Feature request / 功能建议
+description: Propose an improvement to an existing Skill or repository workflow.
+title: "[Feature]: "
+labels: [enhancement]
+body:
+  - type: dropdown
+    id: skill
+    attributes:
+      label: Related Skill
+      options:
+        - learning-path-designer
+        - paper-explainer
+        - skill-builder
+        - xhs-image-text-generator
+        - youtube-podcast-to-md
+        - Repository tooling or documentation
+    validations:
+      required: true
+  - type: textarea
+    id: workflow
+    attributes:
+      label: User workflow
+      description: Describe the real task, current friction, and desired result.
+    validations:
+      required: true
+  - type: textarea
+    id: example
+    attributes:
+      label: Example prompt and expected output
+      description: A concrete example helps us evaluate triggering and output quality.
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered

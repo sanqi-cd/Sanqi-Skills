@@ -1,0 +1,55 @@
+name: Bug report / 问题反馈
+description: Report a reproducible Skill, script, or output problem.
+title: "[Bug]: "
+labels: [bug]
+body:
+  - type: dropdown
+    id: skill
+    attributes:
+      label: Affected Skill
+      options:
+        - learning-path-designer
+        - paper-explainer
+        - skill-builder
+        - xhs-image-text-generator
+        - youtube-podcast-to-md
+        - Repository tooling or documentation
+    validations:
+      required: true
+  - type: textarea
+    id: prompt
+    attributes:
+      label: Prompt or input
+      description: Remove credentials and personal data before sharing.
+      placeholder: What input caused the problem?
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behavior
+      description: Include the exact error, output excerpt, or screenshot when useful.
+    validations:
+      required: true
+  - type: input
+    id: environment
+    attributes:
+      label: Agent and environment
+      placeholder: Codex / Claude Code / OpenCode / OpenClaw, OS, Python version
+    validations:
+      required: true
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Pre-submission checks
+      options:
+        - label: I removed credentials and personal data from this report.
+          required: true
+        - label: I checked existing Issues for the same problem.
+          required: true

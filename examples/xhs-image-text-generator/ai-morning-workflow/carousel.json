@@ -1,0 +1,85 @@
+{
+  "topic": "AI 晨间工作流",
+  "audience": "每天被信息淹没的职场人",
+  "angle": "30 分钟完成信息筛选、任务排序和开工准备",
+  "visual_system": {
+    "style": "editorial utility",
+    "background": "#F7F5EF",
+    "foreground": "#17211B",
+    "accent": "#E64A3B"
+  },
+  "pages": [
+    {
+      "number": 1,
+      "role": "cover",
+      "title": "上班前30分钟，让AI清空脑内待办",
+      "subtitle": "每天只做一次整理，开工不再靠硬撑",
+      "bullets": [],
+      "visual_note": "大号数字 30 与清晰的三段流程形成首屏钩子",
+      "source_note": ""
+    },
+    {
+      "number": 2,
+      "role": "pain",
+      "title": "你不是忙，是启动成本太高",
+      "subtitle": "消息、会议、文档和待办同时抢注意力",
+      "bullets": ["先翻聊天记录", "再找昨天做到哪", "真正开工已经很累"],
+      "visual_note": "用散乱信息块和单一焦点形成对比",
+      "source_note": ""
+    },
+    {
+      "number": 3,
+      "role": "overview",
+      "title": "晨间只跑这3步",
+      "subtitle": "收集、决策、启动，30 分钟闭环",
+      "bullets": ["10 分钟收集输入", "10 分钟排定优先级", "10 分钟产出开工草稿"],
+      "visual_note": "三段式横向流程，强调顺序与时间盒",
+      "source_note": ""
+    },
+    {
+      "number": 4,
+      "role": "step",
+      "title": "第1步：把散乱输入交给AI",
+      "subtitle": "一次性粘贴，不边看边处理",
+      "bullets": ["昨日日志与未完成项", "今天的会议和截止时间", "新增消息与临时需求"],
+      "visual_note": "多个输入箭头汇入一个整理框",
+      "source_note": ""
+    },
+    {
+      "number": 5,
+      "role": "step",
+      "title": "第2步：只保留今天的3件事",
+      "subtitle": "让AI按影响、紧急度、依赖关系排序",
+      "bullets": ["必须完成 1 件", "推进关键结果 1 件", "低阻力收尾 1 件"],
+      "visual_note": "数字 1、2、3 配合优先级阶梯",
+      "source_note": ""
+    },
+    {
+      "number": 6,
+      "role": "example",
+      "title": "第3步：先做出最小开工稿",
+      "subtitle": "不要只让AI列计划，要让它产出第一版",
+      "bullets": ["邮件先写主题和三段正文", "方案先搭目录和关键结论", "分析先列指标和数据缺口"],
+      "visual_note": "空白页面与已有骨架的前后对比",
+      "source_note": ""
+    },
+    {
+      "number": 7,
+      "role": "warning",
+      "title": "3个坑会让工作流失效",
+      "subtitle": "工具越多，越容易把整理变成新任务",
+      "bullets": ["每天更换提示词", "输入不含真实截止时间", "排序后仍同时开三件事"],
+      "visual_note": "三个醒目标记配合简短避坑说明",
+      "source_note": ""
+    },
+    {
+      "number": 8,
+      "role": "cta",
+      "title": "明早先完成一个30分钟闭环",
+      "subtitle": "收藏这套流程，下班前留下明天的输入",
+      "bullets": ["收集 10 分钟", "决策 10 分钟", "启动 10 分钟"],
+      "visual_note": "完整闭环箭头与可勾选的明日行动",
+      "source_note": ""
+    }
+  ]
+}

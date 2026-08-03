@@ -13,10 +13,15 @@ REQUIRED_MARKERS = (
     "起点",
     "终点",
     "今天的小胜利",
+    "成长路线",
+    "全周期行动卡",
+    "知识树",
+    "任务树",
+    "成果展台",
     "本站作品",
     "通关标准",
     "localStorage",
-    "@media(max-width:680px)",
+    "@media(max-width:760px)",
 )
 
 

@@ -1,72 +1,9 @@
-#!/usr/bin/env python3
-"""Render a structured learning plan JSON file as a standalone HTML growth map."""
-
-from __future__ import annotations
-
-import argparse
-import html
-import json
-from pathlib import Path
-
-
-REQUIRED_TEXT = ("title", "learner", "start_state", "goal_state", "time_budget", "today_win")
-REQUIRED_LISTS = (
-    "methodologies",
-    "knowledge_tree",
-    "task_tree",
-    "final_deliverables",
-    "review_rules",
-)
-REQUIRED_PHASE_TEXT = ("id", "title", "duration", "ability", "deliverable", "pass_criteria")
-
-
-def validate_plan(plan: dict) -> list[str]:
-    errors: list[str] = []
-    for key in REQUIRED_TEXT:
-        if not isinstance(plan.get(key), str) or not plan[key].strip():
-            errors.append(f"{key} must be a non-empty string")
-
-    phases = plan.get("phases")
-    if not isinstance(phases, list) or not 4 <= len(phases) <= 6:
-        errors.append("phases must contain 4-6 items")
-        phases = []
-    ids: set[str] = set()
-    for index, phase in enumerate(phases, 1):
-        if not isinstance(phase, dict):
-            errors.append(f"phase {index} must be an object")
-            continue
-        for key in REQUIRED_PHASE_TEXT:
-            if not isinstance(phase.get(key), str) or not phase[key].strip():
-                errors.append(f"phase {index}.{key} must be a non-empty string")
-        phase_id = phase.get("id")
-        if isinstance(phase_id, str):
-            if phase_id in ids:
-                errors.append(f"phase id {phase_id!r} is duplicated")
-            ids.add(phase_id)
-        tasks = phase.get("tasks")
-        if not isinstance(tasks, list) or not tasks or not all(
-            isinstance(item, str) and item.strip() for item in tasks
-        ):
-            errors.append(f"phase {index}.tasks must contain non-empty strings")
-
-    for key in REQUIRED_LISTS:
-        value = plan.get(key)
-        if not isinstance(value, list) or not value or not all(
-            isinstance(item, str) and item.strip() for item in value
-        ):
-            errors.append(f"{key} must contain non-empty strings")
-    return errors
-
-
-def render(plan: dict) -> str:
-    data = json.dumps(plan, ensure_ascii=False).replace("<", "\\u003c")
-    title = html.escape(plan["title"])
-    template = """<!doctype html>
+<!doctype html>
 <html lang="zh-CN">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>__TITLE__</title>
+<title>30天从会用AI到拥有稳定内容工作流</title>
 <style>
 :root{--ink:#17211b;--muted:#66706a;--paper:#f5f7f3;--panel:#fff;--line:#d8ded8;--green:#26734d;--yellow:#f2c94c;--blue:#2869a8;--red:#c84a43}
 *{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.65 system-ui,-apple-system,"PingFang SC",sans-serif;letter-spacing:0}
@@ -84,7 +21,7 @@ button,input{font:inherit}.shell{width:min(1120px,calc(100% - 32px));margin:0 au
 </style>
 </head>
 <body><main class="shell" id="app"></main>
-<script id="learning-plan-data" type="application/json">__DATA__</script>
+<script id="learning-plan-data" type="application/json">{"title": "30天从会用AI到拥有稳定内容工作流", "learner": "已有写作经验的内容创作者", "start_state": "会零散使用 AI，但选题、研究、写作和复盘彼此割裂", "goal_state": "能独立运行一套可复用的选题到发布工作流，并用数据持续迭代", "time_budget": "每天 60 分钟，共 30 天", "methodologies": ["项目制学习", "输出倒逼输入", "最小可行练习", "每周作品复盘"], "knowledge_tree": ["受众问题与内容定位", "检索和证据边界", "提示词与上下文设计", "内容结构与编辑", "发布数据与复盘"], "task_tree": ["建立受众问题库", "完成三次主题研究", "沉淀选题和写作模板", "发布四篇真实内容", "形成个人内容工作流"], "phases": [{"id": "positioning", "title": "锁定内容问题", "duration": "第 1 周", "ability": "从目标受众的真实场景中提炼可验证选题", "tasks": ["访谈或整理 10 个受众原话", "建立 20 条问题清单", "用价值与证据筛选 5 个选题"], "deliverable": "受众问题库与 5 个优先选题", "pass_criteria": "每个选题都能说明人群、场景、收益和证据来源"}, {"id": "research", "title": "建立研究流程", "duration": "第 2 周", "ability": "用 AI 加速资料搜集，同时区分事实、观点和推断", "tasks": ["为 3 个选题建立资料包", "制作统一事实核验清单", "完成 1 篇带来源的内容大纲"], "deliverable": "3 份主题资料包与事实核验模板", "pass_criteria": "随机抽取 5 个事实都能回到原始来源"}, {"id": "production", "title": "跑通生产管线", "duration": "第 3 周", "ability": "把研究结果稳定转化为符合个人表达的成稿", "tasks": ["固化大纲、初稿和编辑提示词", "发布 2 篇不同结构的内容", "记录每一步耗时与返工原因"], "deliverable": "一套内容生产模板与 2 篇已发布作品", "pass_criteria": "能在 90 分钟内从资料包完成可发布初稿"}, {"id": "iteration", "title": "用数据完成迭代", "duration": "第 4 周至第 30 天", "ability": "根据阅读、收藏和评论信号定位内容问题并改版", "tasks": ["发布第 3、4 篇内容", "对比标题、开头和结构表现", "完成月度复盘并确定下月实验"], "deliverable": "4 篇作品、数据复盘和个人 AI 内容 SOP", "pass_criteria": "能基于数据提出 3 个明确且可测试的改进动作"}], "final_deliverables": ["受众问题库", "主题研究模板", "内容生产提示词组", "4 篇真实作品", "个人 AI 内容 SOP", "月度数据复盘"], "today_win": "用 20 分钟写下一个目标读者、三个真实场景和十个原话式问题", "review_rules": ["每天只记录一次最耗时的环节，不做复杂统计", "连续两次事实核验失败时减少 AI 生成并增加原始资料", "单篇制作超过 120 分钟时缩小选题范围", "每周用已发布作品而非学习时长判断进展"]}</script>
 <script>
 const plan=JSON.parse(document.getElementById('learning-plan-data').textContent);const app=document.getElementById('app');
 const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -96,29 +33,4 @@ function taskId(phaseIndex,taskIndex){return `${plan.phases[phaseIndex].id}-${ta
 function updateProgress(){const all=[];plan.phases.forEach((p,pi)=>p.tasks.forEach((_,ti)=>all.push(taskId(pi,ti))));const done=all.filter(id=>saved[id]).length;document.getElementById('globalBar').style.width=(all.length?done/all.length*100:0)+'%';document.getElementById('globalProgress').textContent=`${done} / ${all.length} 项`;const phase=plan.phases[activePhase];const phaseDone=phase.tasks.filter((_,ti)=>saved[taskId(activePhase,ti)]).length;document.getElementById('phaseBar').style.width=(phase.tasks.length?phaseDone/phase.tasks.length*100:0)+'%';document.getElementById('phaseProgress').textContent=`${phaseDone} / ${phase.tasks.length} 项`;try{localStorage.setItem(storageKey,JSON.stringify(saved))}catch(e){}}
 function renderTasks(){const tabs=document.getElementById('phaseTabs');tabs.innerHTML=plan.phases.map((p,i)=>`<button class="phase-tab ${i===activePhase?'active':''}" data-phase="${i}" type="button">${esc(p.duration)}</button>`).join('');const phase=plan.phases[activePhase];document.getElementById('taskList').innerHTML=phase.tasks.map((task,i)=>{const id=taskId(activePhase,i);return `<label class="task ${saved[id]?'done':''}"><input type="checkbox" data-id="${esc(id)}" ${saved[id]?'checked':''}><span>${esc(task)}</span></label>`}).join('');tabs.querySelectorAll('button').forEach(button=>button.addEventListener('click',()=>{activePhase=Number(button.dataset.phase);renderTasks()}));document.querySelectorAll('.task input').forEach(box=>box.addEventListener('change',()=>{saved[box.dataset.id]=box.checked;box.closest('.task').classList.toggle('done',box.checked);updateProgress()}));updateProgress()}
 document.getElementById('reviewToggle').addEventListener('click',event=>{const review=document.getElementById('review');review.classList.toggle('open');event.currentTarget.textContent=review.classList.contains('open')?'收起复盘规则':'显示复盘规则'});renderStage();renderTasks();
-</script></body></html>"""
-    return template.replace("__TITLE__", title).replace("__DATA__", data)
-
-
-def main() -> int:
-    parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("plan", type=Path, help="Learning plan JSON file")
-    parser.add_argument("output", type=Path, help="Destination HTML file")
-    args = parser.parse_args()
-    try:
-        plan = json.loads(args.plan.read_text(encoding="utf-8"))
-    except (OSError, json.JSONDecodeError) as exc:
-        parser.error(f"cannot read plan JSON: {exc}")
-    if not isinstance(plan, dict):
-        parser.error("plan JSON root must be an object")
-    errors = validate_plan(plan)
-    if errors:
-        parser.error("invalid plan: " + "; ".join(errors))
-    args.output.parent.mkdir(parents=True, exist_ok=True)
-    args.output.write_text(render(plan), encoding="utf-8")
-    print(args.output.resolve())
-    return 0
-
-
-if __name__ == "__main__":
-    raise SystemExit(main())
+</script></body></html>

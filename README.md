@@ -47,6 +47,8 @@
 
 把 `<skill-name>` 换成你想装的那个，比如 `youtube-podcast-to-md`。Agent 会自己 clone 到对应目录，不用你操心路径。
 
+默认链接跟随 `main` 获取最新版本；需要固定行为时，可将 URL 中的 `main` 替换为已发布版本，例如 [`v1.0.0`](https://github.com/sanqi-cd/Sanqi-Skills/releases/tag/v1.0.0)。
+
 ---
 
 ## ✅ 质量保证
@@ -66,6 +68,36 @@ python3 scripts/validate_repository.py
 ```
 
 质量门槛与贡献规范见 [CONTRIBUTING.md](./CONTRIBUTING.md)。
+
+---
+
+## 🖼️ 实际输出
+
+以下示例均由仓库中的确定性渲染器生成。每个案例目录同时保留结构化数据和单文件 HTML，可复现、可检查、可继续编辑。
+
+### 小红书 8 页图文
+
+<table>
+<tr>
+<td width="50%"><img src="./examples/xhs-image-text-generator/ai-morning-workflow/preview.png" alt="AI 晨间工作流 8 页小红书图文预览"><br><strong>AI 晨间工作流</strong><br><a href="./examples/xhs-image-text-generator/ai-morning-workflow/carousel.json">数据源</a> · <a href="./examples/xhs-image-text-generator/ai-morning-workflow/cards.html">单文件 HTML</a></td>
+<td width="50%"><img src="./examples/xhs-image-text-generator/knowledge-management/preview.png" alt="小白知识管理 8 页小红书图文预览"><br><strong>小白知识管理</strong><br><a href="./examples/xhs-image-text-generator/knowledge-management/carousel.json">数据源</a> · <a href="./examples/xhs-image-text-generator/knowledge-management/cards.html">单文件 HTML</a></td>
+</tr>
+</table>
+
+### HTML 学习成长地图
+
+<table>
+<tr>
+<td width="50%"><img src="./examples/learning-path-designer/ai-content-creator/preview.png" alt="AI 内容创作者 30 天学习成长地图"><br><strong>AI 内容创作者 · 30 天</strong><br><a href="./examples/learning-path-designer/ai-content-creator/learning-plan.json">数据源</a> · <a href="./examples/learning-path-designer/ai-content-creator/growth-map.html">交互式 HTML</a></td>
+<td width="50%"><img src="./examples/learning-path-designer/data-analyst-transition/preview.png" alt="运营转数据分析 8 周学习成长地图"><br><strong>运营转数据分析 · 8 周</strong><br><a href="./examples/learning-path-designer/data-analyst-transition/learning-plan.json">数据源</a> · <a href="./examples/learning-path-designer/data-analyst-transition/growth-map.html">交互式 HTML</a></td>
+</tr>
+</table>
+
+重新生成 HTML 和截图：
+
+```bash
+python3 scripts/capture_examples.py
+```
 
 ---
 
