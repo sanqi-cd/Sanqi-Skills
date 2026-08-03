@@ -65,7 +65,7 @@ python3 -m unittest discover -s tests -v
 python3 scripts/validate_repository.py
 ```
 
-详细改造与发布门槛见 [优化实施计划](./docs/skill-optimization-plan.md)，贡献规范见 [CONTRIBUTING.md](./CONTRIBUTING.md)。
+质量门槛与贡献规范见 [CONTRIBUTING.md](./CONTRIBUTING.md)。
 
 ---
 
@@ -137,7 +137,7 @@ python3 scripts/validate_repository.py
 
 ## 🌟 关于
 
-我是 sanqi，这些 skill 都是自己日常在用的，开源出来如果对你有帮助，给个 ⭐ 就行。有问题或建议，欢迎在 Issues / Discussions 里交流。
+我是 sanqi，这些 skill 都是自己日常在用的，开源出来如果对你有帮助，给个 ⭐ 就行。有问题或建议，欢迎在 Issues 里交流。
 
 ---
 

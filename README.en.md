@@ -1,6 +1,6 @@
 <div align="center">
 
-**中文** · [English](./README.en.md)
+[中文](./README.md) · **English**
 
 # 🧰 Sanqi Skills
 #### A collection of AI skills I use daily, open-sourced here
@@ -65,7 +65,7 @@ python3 -m unittest discover -s tests -v
 python3 scripts/validate_repository.py
 ```
 
-See the [optimization plan](./docs/skill-optimization-plan.md) for release gates and [CONTRIBUTING.md](./CONTRIBUTING.md) for contribution rules.
+See [CONTRIBUTING.md](./CONTRIBUTING.md) for quality gates and contribution rules.
 
 ---
 
@@ -137,7 +137,7 @@ Provide a resilient and verifiable workflow from transcript retrieval to structu
 
 ## 🌟 About
 
-I'm sanqi. These are skills I use daily. If they help you, give it a ⭐. Questions or suggestions? Feel free to open an Issue or Discussion.
+I'm sanqi. These are skills I use daily. If they help you, give it a ⭐. Questions or suggestions? Feel free to open an Issue.
 
 ---
 
