@@ -47,7 +47,7 @@ Install this skill: https://github.com/sanqi-cd/Sanqi-Skills/tree/main/<skill-na
 
 Replace `<skill-name>` with the one you want, e.g. `youtube-podcast-to-md`. The Agent will clone it to the appropriate directory automatically.
 
-The default URL follows `main` for the newest version. For stable behavior, replace `main` with a published release such as [`v1.0.0`](https://github.com/sanqi-cd/Sanqi-Skills/releases/tag/v1.0.0).
+The default URL follows `main` for the newest version. For stable behavior, replace `main` with a published release such as [`v1.1.0`](https://github.com/sanqi-cd/Sanqi-Skills/releases/tag/v1.1.0).
 
 ---
 

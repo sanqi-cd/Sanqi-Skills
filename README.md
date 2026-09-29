@@ -47,7 +47,7 @@
 
 把 `<skill-name>` 换成你想装的那个，比如 `youtube-podcast-to-md`。Agent 会自己 clone 到对应目录，不用你操心路径。
 
-默认链接跟随 `main` 获取最新版本；需要固定行为时，可将 URL 中的 `main` 替换为已发布版本，例如 [`v1.0.0`](https://github.com/sanqi-cd/Sanqi-Skills/releases/tag/v1.0.0)。
+默认链接跟随 `main` 获取最新版本；需要固定行为时，可将 URL 中的 `main` 替换为已发布版本，例如 [`v1.1.0`](https://github.com/sanqi-cd/Sanqi-Skills/releases/tag/v1.1.0)。
 
 ---
 
