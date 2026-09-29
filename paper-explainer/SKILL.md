@@ -6,7 +6,7 @@ license: MIT
 compatibility: Requires PDF or local file reading; internet access is needed when the input is an arXiv link, DOI, title, or incomplete excerpt.
 metadata:
   author: "sanqi-cd"
-  version: "1.0.0"
+  version: "1.1.0"
   emoji: "📄"
   description_zh: "准确、通俗地解释论文的方法、公式、实验、创新与局限，并明确证据边界。"
   description_en: "Explain papers accurately and accessibly while separating source claims, evidence, and interpretation."
@@ -109,23 +109,24 @@ metadata:
 [关键术语解释]
 
 ## 方法
-[核心内容简述]
-[通俗类比]
+[作者陈述：核心内容与定位符]
+[解读：通俗类比]
 [关键术语解释]
 [可复现细节：数据集 | 超参 | 环境 | 实现要点]
 [未提及的细节]
 
 ## 实验
-[核心内容简述]
+[论文证据：主要结果与定位符]
 [通俗类比]
-[主要结果]
 [可复现细节]
-[实验局限性（如有）]
 
 ## 结论
 [作者声称的贡献]
 [客观实验结果支撑了什么]
 [未解决的问题/未来方向]
+
+## 局限与边界
+[作者承认的局限、实验未覆盖的场景，以及你无法核实的部分]
 
 ## 一句话总结
 [论文最值得记住的一个点]
@@ -138,6 +139,8 @@ metadata:
 ```bash
 python3 scripts/validate_note.py "<note.md>"
 ```
+
+如果已知 PDF 总页数，增加 `--page-count <页数>` 检查页码是否越界。结构校验不能证明引用内容正确；交付前仍需逐条回到论文核对关键结论与定位符。
 
 校验失败时回修并重跑。若因源材料本身缺失而无法满足定位要求，在“来源与证据边界”中明确说明，并向用户报告未通过项，不得伪造定位符。
 

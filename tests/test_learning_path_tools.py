@@ -1,11 +1,13 @@
 import importlib.util
 import json
+import sys
 import tempfile
 import unittest
 from pathlib import Path
 
 
 ROOT = Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(ROOT / "learning-path-designer" / "scripts"))
 
 
 def load_module(name: str, path: Path):
@@ -26,12 +28,15 @@ validate_growth_map = load_module(
 
 def sample_plan():
     return {
+        "schema_version": 2,
+        "total_days": 28,
         "title": "四周学习路径",
         "learner": "零基础学习者",
         "start_state": "尚未入门",
         "goal_state": "能完成独立作品",
         "time_budget": "每周 6 小时",
         "methodologies": ["项目制学习"],
+        "diagnosis": ["有明确学习目标与每周时间预算"],
         "knowledge_tree": ["核心概念", "常见模式"],
         "task_tree": ["完成练习", "交付作品"],
         "final_deliverables": ["知识地图", "独立作品"],
@@ -47,7 +52,21 @@ def sample_plan():
             }
             for index in range(1, 5)
         ],
+        "action_groups": [
+            {
+                "label": f"第 {index} 周",
+                "start_day": 7 * (index - 1) + 1,
+                "end_day": 7 * index,
+                "tasks": [
+                    {"title": "完成练习", "minutes": 30, "output": "练习记录", "check": "可独立演示"}
+                ],
+            }
+            for index in range(1, 5)
+        ],
+        "toolbelt": ["练习资料"],
+        "validation_standards": ["能够独立演示作品"],
         "today_win": "完成第一个练习",
+        "review_questions": {"daily": "今天学会了什么？", "weekly": "作品是否达到标准？"},
         "review_rules": ["每周复盘作品"],
     }
 
@@ -72,6 +91,14 @@ class LearningPathToolsTest(unittest.TestCase):
         del plan["knowledge_tree"]
         self.assertIn(
             "knowledge_tree must contain non-empty strings",
+            render_growth_map.validate_plan(plan),
+        )
+
+    def test_rejects_uncovered_days(self):
+        plan = sample_plan()
+        plan["action_groups"][-1]["end_day"] = 27
+        self.assertIn(
+            "action_groups must cover every day through total_days",
             render_growth_map.validate_plan(plan),
         )
 

@@ -26,7 +26,10 @@ jobs:
       - name: Compile Python helpers
         run: python3 -m compileall -q scripts */scripts
 
-      - name: Run unit tests
+      - name: Install image validation dependency
+        run: python3 -m pip install --disable-pip-version-check -r xhs-image-text-generator/requirements.txt
+
+      - name: Test helpers
         run: python3 -m unittest discover -s tests -v
 
       - name: Install pinned Agent Skills reference validator

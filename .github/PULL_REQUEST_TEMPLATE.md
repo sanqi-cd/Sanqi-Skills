@@ -11,5 +11,5 @@
 - [ ] `python3 -m unittest discover -s tests -v`
 - [ ] `python3 scripts/validate_repository.py`
 - [ ] `git diff --check`
-- [ ] I reviewed generated screenshots when renderer or example output changed
+- [ ] I regenerated example HTML when source data or the renderer changed, and reviewed visual behavior when available
 - [ ] I did not add credentials, personal data, caches, or generated user outputs

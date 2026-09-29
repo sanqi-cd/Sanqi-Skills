@@ -6,7 +6,7 @@ license: MIT
 compatibility: Requires local filesystem access and Python 3 for repository validation; optional external tools depend on the skill being built.
 metadata:
   author: "sanqi-cd"
-  version: "1.0.0"
+  version: "1.1.0"
   emoji: "🧰"
   description_zh: "把模糊想法打磨成符合规范、可执行、可维护、可评测的 Agent Skill。"
   description_en: "Turn a rough idea into a standards-compliant, executable, maintainable, and evaluable Agent Skill."
@@ -49,17 +49,17 @@ metadata:
 
 ### 2. 设计最小能力包
 
-默认结构：
+先区分目标：可移植的 Agent Skills 包只要求根目录有 `SKILL.md`；下面是需要适配 Codex 展示并满足本仓库发布门禁时采用的 Sanqi 完整结构，不是开放标准的强制目录：
 
 ```text
 skill-name/
 ├── SKILL.md
 ├── agents/
-│   └── openai.yaml
+│   └── openai.yaml # 仅在目标客户端需要时
 ├── scripts/       # 仅在确定性操作能提高可靠性时添加
 ├── references/    # 仅放按需读取的领域知识或长规范
 ├── assets/        # 仅放最终输出会直接使用的模板或素材
-└── evals/
+└── evals/       # 本仓库的发布约定
     ├── evals.json
     └── trigger-evals.json
 ```
@@ -70,7 +70,7 @@ skill-name/
 
 ### 3. 编写标准元数据
 
-顶层只使用 Agent Skills 标准字段：
+顶层使用 Agent Skills 支持的字段。最小可移植包需要 `name` 和 `description`；`license`、`compatibility`、`metadata` 属于可选字段。本仓库另外要求 MIT 和统一的展示元数据，不能把这些仓库约定称为开放标准的强制要求：
 
 ```yaml
 ---
@@ -92,7 +92,7 @@ metadata:
 - 自定义展示信息放进 `metadata`，所有值使用字符串。
 - 仅在 Skill 确实需要时声明 `allowed-tools`；不要用它掩盖未说明的依赖。
 
-为支持相应客户端的仓库补充 `agents/openai.yaml`。所有字符串加引号，`default_prompt` 必须明确提到 `$skill-name`；只有用户或项目规范明确要求时才加入品牌色等可选字段。
+目标是 Codex 等使用该文件的客户端，或发布到本仓库时，补充 `agents/openai.yaml`。本仓库要求其中字符串加引号，`default_prompt` 明确提到 `$skill-name`；其他客户端可能忽略此文件。
 
 ### 4. 编写可执行指令
 
@@ -120,13 +120,13 @@ metadata:
 
 ### 6. 建立评测
 
-每个 Skill 至少提供：
+发布到本仓库的每个 Skill 至少提供以下数据集；其他仓库按自身评测政策调整：
 
 - 触发评测：不少于 6 个正例和 6 个难负例，覆盖中英文、口语化请求和相邻能力混淆。
 - 输出评测：不少于 3 个案例，包含标准场景、缺口场景和失败/边界场景。
 - 每个输出案例包含可观察 assertions，不以“看起来不错”作为标准。
 
-条件允许时，对代表性案例做启用 Skill 与不启用 Skill 的对照运行，记录成功率、遗漏和副作用。没有模型或凭据时仍要校验评测 JSON 的结构，并明确说明尚未运行模型评测。
+条件允许时，用[仓库评测脚本](../scripts/run_evals.py)进行元数据路由模拟；拿到真实执行记录后再运行输出 assertions 评测。路由模拟不等同于目标客户端的真实 Skill 自动触发，输出评分也不等同于端到端执行。对代表性案例可做启用 Skill 与不启用 Skill 的对照运行，记录成功率、遗漏和副作用。没有模型或凭据时仍要校验评测 JSON 的结构，并明确说明尚未运行模型评测。
 
 ### 7. 验证并回修
 
@@ -144,7 +144,7 @@ metadata:
 ## 质量标准
 
 - [ ] 触发描述能区分至少一个相邻但不应触发的请求。
-- [ ] 顶层元数据符合开放标准，名称与目录一致。
+- [ ] 顶层元数据符合开放标准；本仓库额外约定单独通过仓库验证器检查。
 - [ ] 主流程、降级路径、失败条件和最终交付都明确。
 - [ ] 所有引用存在，脚本可独立执行且有失败码。
 - [ ] 至少 12 个触发案例和 3 个输出案例通过结构校验。

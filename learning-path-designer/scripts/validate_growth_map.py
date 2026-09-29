@@ -4,8 +4,11 @@
 from __future__ import annotations
 
 import argparse
+import json
 import re
 from pathlib import Path
+
+from render_growth_map import validate_plan
 
 
 REQUIRED_MARKERS = (
@@ -13,11 +16,13 @@ REQUIRED_MARKERS = (
     "起点",
     "终点",
     "今天的小胜利",
+    "学习诊断",
     "成长路线",
     "全周期行动卡",
     "知识树",
     "任务树",
     "成果展台",
+    "学习装备",
     "本站作品",
     "通关标准",
     "localStorage",
@@ -33,6 +38,23 @@ def validate_html(content: str) -> list[str]:
         errors.append("external dependencies are not allowed")
     if "TODO" in content or "__PLACEHOLDER__" in content:
         errors.append("unresolved placeholder found")
+    match = re.search(
+        r'<script id="learning-plan-data" type="application/json">(.*?)</script>',
+        content,
+        re.S,
+    )
+    if match is None:
+        errors.append("embedded learning plan data is missing")
+    else:
+        try:
+            plan = json.loads(match.group(1))
+        except json.JSONDecodeError:
+            errors.append("embedded learning plan data is invalid JSON")
+        else:
+            if not isinstance(plan, dict):
+                errors.append("embedded learning plan must be an object")
+            else:
+                errors.extend(validate_plan(plan))
     return errors
 
 

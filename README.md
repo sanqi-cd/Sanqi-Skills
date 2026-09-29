@@ -53,7 +53,7 @@
 
 ## ✅ 质量保证
 
-每个 Skill 都包含统一的标准元数据、客户端入口、触发评测和输出评测。仓库会在每次 push 和 Pull Request 时自动检查：
+每个 Skill 都包含统一的仓库元数据、Codex 客户端入口、触发案例和输出案例。仓库会在每次 push 和 Pull Request 时自动检查：
 
 - `SKILL.md` 元数据、目录命名和本地引用
 - `agents/openai.yaml` 客户端入口
@@ -63,11 +63,12 @@
 本地完整验证：
 
 ```bash
+python3 -m pip install -r xhs-image-text-generator/requirements.txt
 python3 -m unittest discover -s tests -v
 python3 scripts/validate_repository.py
 ```
 
-质量门槛与贡献规范见 [CONTRIBUTING.md](./CONTRIBUTING.md)。
+CI 只校验评测数据结构，不会自动运行模型或验证真实客户端触发。模型评测运行方法与边界见 [评测说明](./docs/evaluations.md)。质量门槛与贡献规范见 [CONTRIBUTING.md](./CONTRIBUTING.md)。
 
 ---
 

@@ -53,7 +53,7 @@ The default URL follows `main` for the newest version. For stable behavior, repl
 
 ## ✅ Quality Gates
 
-Every skill includes consistent standard metadata, client metadata, trigger evals, and output evals. Each push and pull request checks:
+Every skill includes consistent repository metadata, Codex client metadata, trigger cases, and output cases. Each push and pull request checks:
 
 - `SKILL.md` metadata, directory names, and local references
 - `agents/openai.yaml` client metadata
@@ -63,11 +63,12 @@ Every skill includes consistent standard metadata, client metadata, trigger eval
 Run the complete local verification:
 
 ```bash
+python3 -m pip install -r xhs-image-text-generator/requirements.txt
 python3 -m unittest discover -s tests -v
 python3 scripts/validate_repository.py
 ```
 
-See [CONTRIBUTING.md](./CONTRIBUTING.md) for quality gates and contribution rules.
+CI checks eval dataset structure; it does not run model evaluations or verify actual client activation. See the [evaluation guide](./docs/evaluations.md) for the optional model-backed workflow and its limits, and [CONTRIBUTING.md](./CONTRIBUTING.md) for contribution rules.
 
 ---
 

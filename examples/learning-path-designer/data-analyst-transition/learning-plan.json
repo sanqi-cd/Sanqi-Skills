@@ -1,10 +1,13 @@
 {
+  "schema_version": 2,
+  "total_days": 56,
   "title": "8周从运营表格到独立数据分析项目",
   "learner": "熟悉 Excel、零编程基础的运营专员",
   "start_state": "能制作常规报表，但依赖手工清洗和经验判断",
-  "goal_state": "能用 SQL 与 Python完成清洗、分析和可解释的业务汇报",
+  "goal_state": "能用 SQL 与 Python 完成清洗、分析和可解释的业务汇报",
   "time_budget": "工作日每天 1 小时，周末 3 小时，共 8 周",
   "methodologies": ["项目制学习", "刻意练习", "检索练习", "案例复盘"],
+  "diagnosis": ["已有 Excel 报表经验，能从熟悉的业务问题进入", "缺口在可复算的指标定义、SQL 查询与 Python 自动清洗", "工作日每天 1 小时、周末 3 小时，适合按周交付小成果", "用可重跑脚本和业务同事评审检验能力，不用刷题数量替代项目成果"],
   "knowledge_tree": ["指标口径与业务问题", "SQL 查询与数据模型", "Python 数据清洗", "探索性分析", "可视化与结论表达"],
   "task_tree": ["定义业务问题", "抽取并检查数据", "清洗异常数据", "完成指标分析", "制作汇报并接受反馈"],
   "phases": [
@@ -45,7 +48,44 @@
       "pass_criteria": "10 分钟内讲清问题、证据、限制和下一步行动"
     }
   ],
+  "action_groups": [
+    {"label": "第 1 周", "start_day": 1, "end_day": 7, "tasks": [
+      {"title": "拆解一个真实业务问题", "minutes": 60, "output": "问题树和 3 个核心指标", "check": "业务同事能复述指标含义"},
+      {"title": "建立指标字典", "minutes": 60, "output": "指标口径与数据来源表", "check": "他人可按定义复算"}
+    ]},
+    {"label": "第 2 周", "start_day": 8, "end_day": 14, "tasks": [
+      {"title": "练习筛选和聚合查询", "minutes": 60, "output": "15 道 SQL 查询", "check": "结果与手工抽样一致"},
+      {"title": "复现基础周报", "minutes": 60, "output": "周报查询初版", "check": "指标口径与原报表一致"}
+    ]},
+    {"label": "第 3 周", "start_day": 15, "end_day": 21, "tasks": [
+      {"title": "练习关联与分组", "minutes": 60, "output": "15 道递进查询", "check": "解释连接键和重复行来源"},
+      {"title": "补充数据质量检查", "minutes": 60, "output": "可复用 SQL 查询集", "check": "空值和重复值均有检查结果"}
+    ]},
+    {"label": "第 4 周", "start_day": 22, "end_day": 28, "tasks": [
+      {"title": "用 Python 读取并合并表格", "minutes": 60, "output": "可重跑的读取脚本", "check": "三份原始表格可一键合并"},
+      {"title": "处理缺失值", "minutes": 60, "output": "清洗规则记录", "check": "每条规则说明业务理由"}
+    ]},
+    {"label": "第 5 周", "start_day": 29, "end_day": 35, "tasks": [
+      {"title": "定位异常并探索数据", "minutes": 60, "output": "异常记录和探索图表", "check": "图表标注数据口径"},
+      {"title": "整理清洗脚本", "minutes": 60, "output": "从原始文件到分析表的脚本", "check": "无需手工修改即可重跑"}
+    ]},
+    {"label": "第 6 周", "start_day": 36, "end_day": 42, "tasks": [
+      {"title": "选择留存或转化问题", "minutes": 60, "output": "项目问题和假设清单", "check": "假设可由现有数据验证"},
+      {"title": "形成第一版分析", "minutes": 60, "output": "指标表与图表", "check": "每张图对应一个问题"}
+    ]},
+    {"label": "第 7 周", "start_day": 43, "end_day": 49, "tasks": [
+      {"title": "撰写分析结论", "minutes": 60, "output": "业务分析报告初稿", "check": "区分事实、推断和局限"},
+      {"title": "制作十分钟汇报", "minutes": 60, "output": "汇报稿", "check": "包含问题、证据、限制和行动"}
+    ]},
+    {"label": "第 8 周", "start_day": 50, "end_day": 56, "tasks": [
+      {"title": "邀请业务同事评审", "minutes": 60, "output": "反馈记录", "check": "至少记录 3 条具体反馈"},
+      {"title": "修改并复盘项目", "minutes": 60, "output": "最终报告、脚本和复盘", "check": "他人可根据说明复跑分析"}
+    ]}
+  ],
   "final_deliverables": ["业务问题树", "指标字典", "SQL 查询集", "Python 清洗脚本", "分析项目报告", "作品复盘"],
+  "toolbelt": ["现有运营报表和字段说明", "SQLite 或同类 SQL 环境", "Python 与 pandas", "版本管理工具", "业务同事评审反馈"],
+  "validation_standards": ["三个核心指标可由同事按字典复算", "SQL 周报在同结构新数据上仍可正确运行", "清洗脚本从原始文件到分析表可一键重跑", "十分钟内讲清项目问题、证据、局限和建议"],
   "today_win": "选一张正在使用的运营报表，为三个指标补上定义、时间窗口和数据来源",
+  "review_questions": {"daily": "今天哪一步无法复现，缺少的是数据、规则还是环境说明？", "weekly": "本周交付物能否让同事独立复算或复跑，下一周先修哪处断点？"},
   "review_rules": ["练习卡住 30 分钟先缩小数据集再定位问题", "每周随机重做两道旧题进行检索练习", "脚本只能在本人电脑运行时补充环境和输入说明", "结论无法落到业务动作时回到原始问题重新拆解"]
 }

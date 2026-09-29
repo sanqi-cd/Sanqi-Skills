@@ -14,20 +14,16 @@ import re
 import os
 import shutil
 import subprocess
+import importlib.util
 
 
 def _get_ytdlp_cmd() -> list:
-    """返回可用的 yt-dlp 命令，优先 PATH 中的 yt-dlp，否则用 python3 -m yt_dlp"""
+    """Prefer yt-dlp installed in the interpreter running this script."""
+    if importlib.util.find_spec("yt_dlp") is not None:
+        return [sys.executable, "-m", "yt_dlp"]
     if shutil.which("yt-dlp"):
         return ["yt-dlp"]
-    # 尝试 python3 -m yt_dlp
-    result = subprocess.run(
-        ["python3", "-m", "yt_dlp", "--version"],
-        capture_output=True, text=True
-    )
-    if result.returncode == 0:
-        return ["python3", "-m", "yt_dlp"]
-    return []  # 不可用
+    return []
 
 
 def ensure_dependencies():
@@ -46,7 +42,7 @@ def ensure_dependencies():
         pkgs = " ".join(missing)
         print(f"错误：缺少依赖包: {missing}")
         print(f"请运行: python3 -m pip install {pkgs}")
-        print("提示：请确保 yt-dlp 在 PATH 中，或可通过 `python3 -m yt_dlp` 调用")
+        print("提示：请将 yt-dlp 安装到当前 Python 环境，或添加到 PATH")
         sys.exit(2)
 
 
@@ -66,7 +62,9 @@ def fetch_with_transcript_api(video_id: str) -> tuple:
         try:
             t = transcript_list.find_manually_created_transcript(['en', 'en-US', 'en-GB'])
             if t is not None:
-                return t.fetch(), "手动英文字幕", "en"
+                segments = t.fetch()
+                if segments:
+                    return segments, "手动英文字幕", "en"
         except Exception:
             pass  # 无手动字幕时可能抛出异常
 
@@ -74,7 +72,9 @@ def fetch_with_transcript_api(video_id: str) -> tuple:
         try:
             t = transcript_list.find_generated_transcript(['en', 'en-US', 'en-GB'])
             if t is not None:
-                return t.fetch(), "自动生成英文字幕", "en"
+                segments = t.fetch()
+                if segments:
+                    return segments, "自动生成英文字幕", "en"
         except Exception:
             pass
 
@@ -84,11 +84,21 @@ def fetch_with_transcript_api(video_id: str) -> tuple:
         for t in available_transcripts:
             lang = (getattr(t, 'language_code', '') or '').lower()
             if lang.startswith("en"):
-                return t.fetch(), f"字幕（语言：{lang}）", lang
+                try:
+                    segments = t.fetch()
+                except Exception:
+                    continue
+                if segments:
+                    return segments, f"字幕（语言：{lang}）", lang
 
         for t in available_transcripts:
             lang = getattr(t, 'language_code', '') or ''
-            return t.fetch(), f"字幕（语言：{lang}）", lang
+            try:
+                segments = t.fetch()
+            except Exception:
+                continue
+            if segments:
+                return segments, f"字幕（语言：{lang}）", lang
 
     except Exception as e:
         error_msg = str(e)
@@ -223,7 +233,7 @@ def main():
     print(f"\n[2/3] 正在获取字幕……")
     segments, source, language_code = fetch_with_transcript_api(video_id)
 
-    if segments is None:
+    if not segments:
         print(f"  ✗ 无法获取字幕: {source}")
         print("  → 请尝试运行 Whisper 兜底脚本，例如：")
         print(f"    python3 fetch_with_whisper.py '{url}' . --language auto")

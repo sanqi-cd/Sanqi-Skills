@@ -4,6 +4,7 @@ import sys
 import tempfile
 import unittest
 from pathlib import Path
+from PIL import Image
 
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -71,6 +72,36 @@ class XhsToolsTest(unittest.TestCase):
                 (root / filename).write_text(content, encoding="utf-8")
             (root / "cards.html").write_text(render_carousel.render(sample_carousel()), encoding="utf-8")
             self.assertEqual(validate_delivery.validate_package(root, allow_html=True), [])
+            (root / "cards.html").write_text("", encoding="utf-8")
+            self.assertTrue(any("rendered pages" in error for error in validate_delivery.validate_package(root, allow_html=True)))
+
+    def test_delivery_rejects_wrong_dimensions_and_missing_page(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            for filename in validate_delivery.REQUIRED_FILES:
+                content = json.dumps(sample_carousel(), ensure_ascii=False) if filename == "carousel.json" else "complete"
+                (root / filename).write_text(content, encoding="utf-8")
+            image_dir = root / "images"
+            image_dir.mkdir()
+            for number in (1, 2, 3, 4, 5, 7):
+                Image.new("RGB", (1080, 1350 if number != 3 else 1080)).save(image_dir / f"page-{number:02d}.png")
+            errors = validate_delivery.validate_package(root)
+            self.assertTrue(any("page-03.png" in error for error in errors))
+            self.assertTrue(any("consecutive" in error for error in errors))
+
+    def test_delivery_accepts_valid_images_and_rejects_corrupt_file(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            for filename in validate_delivery.REQUIRED_FILES:
+                content = json.dumps(sample_carousel(), ensure_ascii=False) if filename == "carousel.json" else "complete"
+                (root / filename).write_text(content, encoding="utf-8")
+            image_dir = root / "images"
+            image_dir.mkdir()
+            for number in range(1, 7):
+                Image.new("RGB", (1080, 1440)).save(image_dir / f"page-{number:02d}.png")
+            self.assertEqual(validate_delivery.validate_package(root), [])
+            (image_dir / "page-04.png").write_bytes(b"not an image")
+            self.assertTrue(any("unreadable image" in error for error in validate_delivery.validate_package(root)))
 
     def test_normalizes_html_and_removes_scripts(self):
         title, body = normalize_input.normalize_html(

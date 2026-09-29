@@ -1,39 +1,39 @@
-# Learning Plan Data Contract
+# Learning Plan Data Contract (v2)
 
-Before rendering the growth map, write a UTF-8 JSON object with this shape:
+Write a UTF-8 JSON object before rendering. The canonical, complete examples are `examples/learning-path-designer/ai-content-creator/learning-plan.json` and `examples/learning-path-designer/data-analyst-transition/learning-plan.json` at the repository root.
+
+## Required fields
+
+| Field | Shape | Purpose |
+| --- | --- | --- |
+| `schema_version` | integer `2` | Prevents rendering old, incomplete plans. |
+| `total_days` | positive integer | Length of the entire path. |
+| `title`, `learner`, `start_state`, `goal_state`, `time_budget`, `today_win` | non-empty strings | Learner context and first action. |
+| `methodologies`, `diagnosis`, `knowledge_tree`, `task_tree`, `final_deliverables`, `toolbelt`, `validation_standards`, `review_rules` | non-empty arrays of non-empty strings | Diagnosis, route, evidence and adaptation. |
+| `review_questions` | object with non-empty `daily` and `weekly` strings | Prompts for review. |
+| `phases` | array of 4-6 stage objects | Growth route. |
+| `action_groups` | non-empty array of action-group objects | Executable plan covering days 1 through `total_days`. |
+
+Each `phases` item needs unique `id`, `title`, `duration`, `ability`, `deliverable`, `pass_criteria`, and a non-empty string array `tasks`. Phase tasks summarize the route; the detailed checkable tasks belong in `action_groups`.
+
+Each `action_groups` item needs a `label`, integer `start_day` and `end_day`, and non-empty `tasks`. Day ranges must be consecutive, non-overlapping, and cover the whole period. Each task is an object with non-empty `title`, `output`, `check`, and positive integer `minutes`.
+
+Example action group:
 
 ```json
 {
-  "title": "30 天从零到能独立完成数据分析报告",
-  "learner": "运营专员，零编程基础",
-  "start_state": "依赖手工整理 Excel",
-  "goal_state": "能用 Python 自动清洗并汇总周报数据",
-  "time_budget": "每天 1 小时，共 30 天",
-  "methodologies": ["项目制学习", "刻意练习", "检索练习"],
-  "knowledge_tree": ["Python 基础", "表格读写", "数据清洗", "分析与表达"],
-  "task_tree": ["读取真实表格", "清洗异常值", "生成指标", "完成分析报告"],
-  "phases": [
+  "label": "第 1 周",
+  "start_day": 1,
+  "end_day": 7,
+  "tasks": [
     {
-      "id": "phase-1",
-      "title": "建立最小基础",
-      "duration": "第 1-5 天",
-      "ability": "读写表格并理解变量与循环",
-      "tasks": ["完成两个小练习", "整理一页错题笔记"],
-      "deliverable": "可运行的数据读取脚本",
-      "pass_criteria": "用新文件运行脚本并解释输出"
+      "title": "整理受众真实问题",
+      "minutes": 60,
+      "output": "10 条原话记录",
+      "check": "每条记录可回到留言或访谈来源"
     }
-  ],
-  "final_deliverables": ["数据清洗脚本", "自动化周报", "分析案例复盘"],
-  "today_win": "安装环境并成功读取一个真实 Excel 文件",
-  "review_rules": ["连续两次未通过时缩小任务粒度", "每周用作品而非学习时长复盘"]
+  ]
 }
 ```
 
-## Constraints
-
-- Include 4-6 phases in chronological order.
-- Give every phase at least one task, one observable deliverable, and one binary pass criterion.
-- Make `id` values unique lowercase slugs.
-- Cover the user's complete requested period, not only the first week.
-- Include non-empty `knowledge_tree`, `task_tree`, and `final_deliverables` arrays so the map shows both understanding and observable evidence.
-- Put only user-facing content in the JSON. Do not include HTML, JavaScript, comments, or secrets.
+Keep only user-facing plan data in JSON. Do not include HTML, JavaScript, comments, secrets or private source material without the user's authorization. Validate with `scripts/render_growth_map.py` before delivery.

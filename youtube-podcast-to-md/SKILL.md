@@ -6,7 +6,7 @@ license: MIT
 compatibility: Requires Python 3, internet access, yt-dlp and youtube-transcript-api; Whisper fallback additionally requires ffmpeg and a compatible Whisper package.
 metadata:
   author: "sanqi-cd"
-  version: "1.0.0"
+  version: "1.1.0"
   emoji: "🎙️"
   description_zh: "提取 YouTube 长视频字幕并生成带来源溯源的中文 Markdown 摘要或高保真对话稿。"
   description_en: "Convert YouTube transcripts into source-grounded Chinese Markdown summaries or faithful dialogue notes."
@@ -77,6 +77,7 @@ Whisper 还要求系统可调用 `ffmpeg`。安装失败时报告缺失依赖，
 补充说明：
 - `fetch_transcript.py` 会优先拿英文字幕；如果只有其他语言字幕，会继续返回该语言字幕
 - `fetch_with_whisper.py` 默认使用 `--language auto` 自动识别语言；若你明确只想按英文转录，可传 `--language en`
+- Whisper 默认使用 CPU 上的 `small` 模型；可按质量和设备条件传 `--model medium` 等，首次运行会下载模型。长视频先告知用户转录耗时和下载量。
 
 中间文件（位于 `"$TMP_DIR"`）：
 - `transcript_raw.txt` — 原始字幕文本（含 `[TS:MM:SS]` 时间戳标记）

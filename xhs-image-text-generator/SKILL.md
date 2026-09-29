@@ -3,10 +3,10 @@ name: xhs-image-text-generator
 description: >
   将 HTML、Markdown、文章、访谈记录、产品资料或主题转化为可直接发布的 6-10 页小红书/RedNote 图文轮播，完成内容提炼、分页、视觉设计、生图、失败重试和交付校验。适用于“小红书配图”“把文章做成卡片”“直接生图并给发布文案”等请求。Use when the user needs final carousel assets, not only prompts or generic summaries.
 license: MIT
-compatibility: Requires Python 3; URL inputs need network access, and full delivery requires image generation plus local file writing.
+compatibility: Requires Python 3; URL inputs need network access, and final image validation requires Pillow plus local file writing.
 metadata:
   author: "sanqi-cd"
-  version: "1.0.0"
+  version: "1.1.0"
   emoji: "📦"
   description_zh: "将主题或文章转化为内容清晰、视觉统一、可直接发布的小红书图文轮播。"
   description_en: "Turn source content into a coherent, publication-ready Xiaohongshu image carousel."
@@ -146,6 +146,7 @@ python3 scripts/init_delivery_package.py "<topic>" --output-root "<output_root>"
 交付前运行：
 
 ```bash
+python3 -m pip install -r requirements.txt
 python3 scripts/validate_delivery.py "<package>"
 ```
 

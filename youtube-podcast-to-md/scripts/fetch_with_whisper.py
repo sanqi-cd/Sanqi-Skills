@@ -21,18 +21,15 @@ import os
 import re
 import subprocess
 import shutil
+import importlib.util
 
 
 def _get_ytdlp_cmd() -> list:
-    """返回可用的 yt-dlp 命令，优先 PATH 中的 yt-dlp，否则用 python3 -m yt_dlp"""
+    """Prefer yt-dlp installed in the interpreter running this script."""
+    if importlib.util.find_spec("yt_dlp") is not None:
+        return [sys.executable, "-m", "yt_dlp"]
     if shutil.which("yt-dlp"):
         return ["yt-dlp"]
-    result = subprocess.run(
-        ["python3", "-m", "yt_dlp", "--version"],
-        capture_output=True, text=True
-    )
-    if result.returncode == 0:
-        return ["python3", "-m", "yt_dlp"]
     return []
 
 
@@ -93,20 +90,15 @@ def download_audio(url: str, output_dir: str) -> str:
     sys.exit(3)
 
 
-def transcribe_with_faster_whisper(audio_path: str, language: str) -> tuple:
+def transcribe_with_faster_whisper(audio_path: str, language: str, model_name: str) -> tuple:
     """
     使用 faster-whisper 进行转录
     返回 (字幕列表, 检测到的语言代码)
     """
     from faster_whisper import WhisperModel
 
-    print("  正在加载 Whisper 模型（首次运行会下载约 1.5GB）……")
-    # 使用 large-v3 模型追求最佳质量，turbo 模型速度更快
-    try:
-        model = WhisperModel("large-v3-turbo", device="cpu", compute_type="int8")
-    except Exception:
-        print("  large-v3-turbo 不可用，回退到 medium 模型")
-        model = WhisperModel("medium", device="cpu", compute_type="int8")
+    print(f"  正在加载 Whisper 模型 {model_name}……")
+    model = WhisperModel(model_name, device="cpu", compute_type="int8")
 
     print("  正在转录（这可能需要几分钟，取决于视频长度）……")
     transcribe_kwargs = {"beam_size": 5}
@@ -127,7 +119,7 @@ def transcribe_with_faster_whisper(audio_path: str, language: str) -> tuple:
     return segments, detected_language
 
 
-def transcribe_with_openai_whisper(audio_path: str, language: str) -> tuple:
+def transcribe_with_openai_whisper(audio_path: str, language: str, model_name: str) -> tuple:
     """
     使用 openai-whisper 进行转录（fallback）
     返回 (字幕列表, 检测到的语言代码)
@@ -135,7 +127,7 @@ def transcribe_with_openai_whisper(audio_path: str, language: str) -> tuple:
     import whisper
 
     print("  正在加载 Whisper 模型……")
-    model = whisper.load_model("medium")
+    model = whisper.load_model(model_name)
 
     print("  正在转录……")
     transcribe_kwargs = {}
@@ -264,6 +256,7 @@ def parse_args():
         default="auto",
         help="Whisper 语言代码，如 en / zh / ja；默认 auto 自动识别",
     )
+    parser.add_argument("--model", default="small", help="Whisper 模型名称，默认 small；高精度可选 medium 或 large-v3")
     return parser.parse_args()
 
 
@@ -273,6 +266,7 @@ def main():
     url = args.url
     output_dir = args.output_dir
     language = args.language
+    model_name = args.model
 
     ensure_ytdlp()
     whisper_backend = init_whisper()
@@ -306,9 +300,9 @@ def main():
     transcribe_start = __import__('time').time()
 
     if whisper_backend == "faster-whisper":
-        segments, detected_language = transcribe_with_faster_whisper(audio_path, language)
+        segments, detected_language = transcribe_with_faster_whisper(audio_path, language, model_name)
     else:
-        segments, detected_language = transcribe_with_openai_whisper(audio_path, language)
+        segments, detected_language = transcribe_with_openai_whisper(audio_path, language, model_name)
 
     elapsed = __import__('time').time() - transcribe_start
     print(f"  ✓ 转录完成，共 {len(segments)} 段，耗时 {elapsed:.0f} 秒")
@@ -316,6 +310,10 @@ def main():
         print(f"  平均每段 {elapsed/len(segments):.1f} 秒")
     if detected_language:
         print(f"  检测语言: {detected_language}")
+
+    if not segments:
+        print("错误：转录未返回任何片段")
+        sys.exit(3)
 
     # 生成原始文本
     raw_text = segments_to_text(segments)

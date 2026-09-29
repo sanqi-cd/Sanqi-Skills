@@ -6,7 +6,7 @@ license: MIT
 compatibility: Requires Python 3 for deterministic rendering and an agent that can write files; a browser is recommended for visual verification.
 metadata:
   author: "sanqi-cd"
-  version: "1.0.0"
+  version: "1.1.0"
   emoji: "🧭"
   description_zh: "根据目标、基础、约束和应用场景设计个性化学习路径，并输出可交互的 HTML 成长地图。"
   description_en: "Design a personalized path from beginner to practical mastery and deliver it as an interactive HTML growth map."
@@ -153,12 +153,12 @@ metadata:
 - 起点与终点：明确用户现在的状态和学习完成后的能力状态。
 - 路径总览：用 4-6 个阶段站点展示完整路线。
 - 每站卡片：包含解锁能力、核心任务、本站作品、通关标准。
-- 全周期行动卡：如果用户给出 7 天、14 天、30 天或 90 天周期，行动卡必须覆盖完整周期；可以按周/阶段切换展示，但不能只给第 1 周细节。
+- 全周期行动卡：如果用户给出 7 天、14 天、30 天或 90 天周期，`action_groups` 的连续日期范围必须覆盖完整周期；每个行动卡写明预计分钟数、可观察产出和检查办法，不能只给第 1 周细节。
 - 今天的小胜利：一个 15-30 分钟能完成的启动任务。
 - 学习装备：推荐方法、工具、资料类型，以及现在不建议做的事。
 - 复盘与升级：太难、太简单、坚持不下去、想加速时如何调整。
 
-如果当前环境可以创建文件，先按 `references/learning-plan-schema.md` 写出结构化 `learning-plan.json`，再运行：
+如果当前环境可以创建文件，先按 `references/learning-plan-schema.md` 写出 v2 结构化 `learning-plan.json`，包含诊断、学习装备、通关标准和每日/每周复盘问题，再运行：
 
 ```bash
 python3 scripts/render_growth_map.py learning-plan.json learning-path-outputs/growth-map.html
@@ -182,7 +182,7 @@ python3 scripts/validate_growth_map.py learning-path-outputs/growth-map.html
 
 如果用户目标模糊，先使用 `references/output-templates.md` 中的「学习诊断引导模板」。
 
-如果用户背景充分，优先使用 `references/html-growth-map-template.md` 生成 HTML 学习成长地图。只有当用户明确要求纯文本时，才使用 `references/output-templates.md` 中的「标准学习路径模板」。
+如果用户背景充分，优先按 `references/learning-plan-schema.md` 准备数据，并用 `scripts/render_growth_map.py` 生成 HTML 学习成长地图；`references/html-growth-map-template.md` 说明页面约定。只有当用户明确要求纯文本时，才使用 `references/output-templates.md` 中的「标准学习路径模板」。
 
 完整学习路径输出必须包含：
 
