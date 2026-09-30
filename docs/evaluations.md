@@ -2,6 +2,8 @@
 
 `scripts/validate_repository.py` 只检查评测数据集结构，不执行模型评测。以下命令需要本机安装并登录 Codex CLI，会发起模型调用，因此不纳入无凭据的 GitHub Actions。
 
+学习地图的 `npm run test:dom` 在 CI 中验证切换、勾选、进度和保存状态；jsdom 不进行真实布局和视觉渲染，不能代替浏览器截图检查。
+
 ## 触发边界模拟
 
 ```bash
@@ -12,7 +14,7 @@ python3 scripts/run_evals.py routing --skill learning-path-designer --report /tm
 
 ## 实际输出评分
 
-先在目标客户端执行 `evals/evals.json` 的案例，并将每条真实执行结果保存为 JSON。输入形状：
+先在目标客户端执行 `evals/evals.json` 的案例，并将每条真实执行结果保存为 JSON。每条案例的 `input_status` 标明是否可直接运行；标为 `needs_fixture` 的案例必须先提供 `fixture_requirements` 所列真实材料，不能把缺失附件当作模型失败。输入形状：
 
 ```json
 {

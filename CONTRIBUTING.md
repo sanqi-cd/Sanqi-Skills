@@ -20,6 +20,8 @@ Run before opening a pull request:
 python3 -m pip install -r xhs-image-text-generator/requirements.txt
 python3 scripts/sync_readme.py
 python3 -m unittest discover -s tests -v
+npm ci --ignore-scripts
+npm run test:dom
 python3 scripts/validate_repository.py
 git diff --check
 ```

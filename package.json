@@ -1,0 +1,9 @@
+{
+  "private": true,
+  "scripts": {
+    "test:dom": "node --test tests/test_growth_map_dom.mjs"
+  },
+  "devDependencies": {
+    "jsdom": "29.1.1"
+  }
+}

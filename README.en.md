@@ -47,7 +47,7 @@ Install this skill: https://github.com/sanqi-cd/Sanqi-Skills/tree/main/<skill-na
 
 Replace `<skill-name>` with the one you want, e.g. `youtube-podcast-to-md`. The Agent will clone it to the appropriate directory automatically.
 
-The default URL follows `main` for the newest version. For stable behavior, replace `main` with a published release such as [`v1.1.0`](https://github.com/sanqi-cd/Sanqi-Skills/releases/tag/v1.1.0).
+The default URL follows `main` for the newest version. For stable behavior, replace `main` with a published release such as [`v1.1.1`](https://github.com/sanqi-cd/Sanqi-Skills/releases/tag/v1.1.1).
 
 ---
 
@@ -65,10 +65,12 @@ Run the complete local verification:
 ```bash
 python3 -m pip install -r xhs-image-text-generator/requirements.txt
 python3 -m unittest discover -s tests -v
+npm ci --ignore-scripts
+npm run test:dom
 python3 scripts/validate_repository.py
 ```
 
-CI checks eval dataset structure; it does not run model evaluations or verify actual client activation. See the [evaluation guide](./docs/evaluations.md) for the optional model-backed workflow and its limits, and [CONTRIBUTING.md](./CONTRIBUTING.md) for contribution rules.
+CI tests growth map DOM interactions, but not visual layout in a real browser. It checks eval dataset structure; it does not run model outputs or verify actual client activation. See the [evaluation guide](./docs/evaluations.md) for the optional model-backed workflow and its limits, and [CONTRIBUTING.md](./CONTRIBUTING.md) for contribution rules.
 
 ---
 

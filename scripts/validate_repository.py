@@ -80,6 +80,13 @@ def validate_eval_files(skill_dir: Path, skill_name: str, errors: list[str]) -> 
                         errors.append(f"{output_path.relative_to(ROOT)}: case {index} is incomplete")
                     elif not isinstance(case["assertions"], list):
                         errors.append(f"{output_path.relative_to(ROOT)}: case {index} assertions must be a list")
+                    elif case.get("input_status") not in {"self_contained", "needs_fixture"}:
+                        errors.append(f"{output_path.relative_to(ROOT)}: case {index} needs a valid input_status")
+                    elif case["input_status"] == "needs_fixture" and (
+                        not isinstance(case.get("fixture_requirements"), str)
+                        or not case["fixture_requirements"].strip()
+                    ):
+                        errors.append(f"{output_path.relative_to(ROOT)}: case {index} must describe its missing fixture")
 
     if trigger_path.is_file():
         data = load_json(trigger_path, errors)

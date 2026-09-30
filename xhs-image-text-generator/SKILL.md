@@ -6,7 +6,7 @@ license: MIT
 compatibility: Requires Python 3; URL inputs need network access, and final image validation requires Pillow plus local file writing.
 metadata:
   author: "sanqi-cd"
-  version: "1.1.0"
+  version: "1.1.1"
   emoji: "📦"
   description_zh: "将主题或文章转化为内容清晰、视觉统一、可直接发布的小红书图文轮播。"
   description_en: "Turn source content into a coherent, publication-ready Xiaohongshu image carousel."
@@ -65,6 +65,8 @@ python3 scripts/normalize_input.py "<input>" --output "<normalized.md>"
 - 交付数量：默认 1 篇，8 页图文
 
 不要为可合理默认的信息反复追问。
+
+**高风险主题开工门槛：**涉及投资、个人理财、赚钱、医疗或法律时，如果用户只给了宽泛主题，且素材不足以确定适用人群、具体角度或事实依据，先停在本步骤，最多问 3 个短问题：面向谁及适用地区/情境、想讲哪一类知识或问题、有哪些可核查来源或事实依据。第三问必须明确提到来源或证据；若用户没有素材，可询问是否允许先查证公开资料并只做不含个性化建议的通用科普。在收到回答前，不输出分页脚本、图片或可直接发布的成品；不要凭默认人设、风险承受能力、收益率或法规填补空白。如果用户明确同意采用合理默认值，也只能在可核查事实的范围内制作通用科普，并在成品中写明适用边界。素材已足够明确时直接继续，不重复追问。
 
 ### Step 3：生成发布方案
 
@@ -160,7 +162,7 @@ python3 scripts/validate_delivery.py "<package>"
 - 图文要有保存价值：清单、步骤、模板、工具、对比、避坑
 - 正文负责补充关键词和信任，不能写成公众号长文
 - 评论区要承接需求，不要只写“欢迎评论”
-- 避免夸大承诺；涉及赚钱、医疗、法律、投资等高风险主题时，加边界说明
+- 避免夸大承诺；涉及赚钱、医疗、法律、投资等高风险主题时，先遵守 Step 2 的开工门槛，并在成品中说明适用边界
 - 不要替用户实际发布、点赞、评论或私信，除非用户明确要求且完成发布前确认
 
 ## 推荐分页结构

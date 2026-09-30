@@ -47,7 +47,7 @@
 
 把 `<skill-name>` 换成你想装的那个，比如 `youtube-podcast-to-md`。Agent 会自己 clone 到对应目录，不用你操心路径。
 
-默认链接跟随 `main` 获取最新版本；需要固定行为时，可将 URL 中的 `main` 替换为已发布版本，例如 [`v1.1.0`](https://github.com/sanqi-cd/Sanqi-Skills/releases/tag/v1.1.0)。
+默认链接跟随 `main` 获取最新版本；需要固定行为时，可将 URL 中的 `main` 替换为已发布版本，例如 [`v1.1.1`](https://github.com/sanqi-cd/Sanqi-Skills/releases/tag/v1.1.1)。
 
 ---
 
@@ -65,10 +65,12 @@
 ```bash
 python3 -m pip install -r xhs-image-text-generator/requirements.txt
 python3 -m unittest discover -s tests -v
+npm ci --ignore-scripts
+npm run test:dom
 python3 scripts/validate_repository.py
 ```
 
-CI 只校验评测数据结构，不会自动运行模型或验证真实客户端触发。模型评测运行方法与边界见 [评测说明](./docs/evaluations.md)。质量门槛与贡献规范见 [CONTRIBUTING.md](./CONTRIBUTING.md)。
+CI 会运行学习地图的 DOM 交互测试，但它不验证真实浏览器视觉排版；评测数据结构之外的模型输出评测和真实客户端触发也不在 CI 中。运行方法与边界见 [评测说明](./docs/evaluations.md)。质量门槛与贡献规范见 [CONTRIBUTING.md](./CONTRIBUTING.md)。
 
 ---
 

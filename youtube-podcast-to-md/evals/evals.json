@@ -3,19 +3,24 @@
   "evals": [
     {
       "id": 1,
+      "input_status": "needs_fixture",
+      "fixture_requirements": "Provide an accessible 90-minute English YouTube interview URL.",
       "prompt": "把这个 90 分钟英文 YouTube 访谈整理为精简版中文 Markdown，保留关键观点的时间戳。",
       "expected_output": "A source-grounded Chinese summary with metadata and timestamp links.",
       "assertions": ["Retrieves metadata and the best available transcript", "Records transcript source and language", "Preserves timestamps for important claims", "Removes repetition without changing meaning", "Validates the final Markdown"]
     },
     {
       "id": 2,
+      "input_status": "needs_fixture",
+      "fixture_requirements": "Provide an accessible YouTube URL with generated subtitles or downloadable audio.",
       "prompt": "这个视频没有人工字幕，请生成完整版中文对话稿。",
       "expected_output": "A faithful dialogue note produced through documented fallback behavior.",
       "assertions": ["Tries generated subtitles before audio transcription", "Reports when Whisper fallback is used", "Does not claim speaker identities without evidence", "Preserves uncertainty for unclear passages", "Keeps full-mode content substantially complete"]
     },
     {
       "id": 3,
-      "prompt": "总结这个已经失效或私密的 YouTube 链接。",
+      "input_status": "self_contained",
+      "prompt": "总结这个已经失效的 YouTube 链接：https://www.youtube.com/watch?v=invalid。无法获取时请如实说明。",
       "expected_output": "A concise, actionable failure report without fabricated content.",
       "assertions": ["Reports that the source cannot be accessed", "Includes the attempted retrieval stage", "Does not invent transcript content", "Suggests supplying a transcript or accessible file"]
     }

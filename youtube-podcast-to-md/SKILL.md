@@ -6,7 +6,7 @@ license: MIT
 compatibility: Requires Python 3, internet access, yt-dlp and youtube-transcript-api; Whisper fallback additionally requires ffmpeg and a compatible Whisper package.
 metadata:
   author: "sanqi-cd"
-  version: "1.1.0"
+  version: "1.1.1"
   emoji: "🎙️"
   description_zh: "提取 YouTube 长视频字幕并生成带来源溯源的中文 Markdown 摘要或高保真对话稿。"
   description_en: "Convert YouTube transcripts into source-grounded Chinese Markdown summaries or faithful dialogue notes."
@@ -141,7 +141,7 @@ mkdir -p "$YTP2MD_OUTPUT_DIR"
 "$PYTHON" "$SKILL_DIR/scripts/validate_output.py" "$OUTPUT_DIR/<文件名>.md" --mode summary
 ```
 
-完整版改用 `--mode full`。校验失败时回修并重跑；来源不可访问时交付明确的失败报告，不生成虚构笔记。
+完整版改用 `--mode full`。校验失败时回修并重跑；来源不可访问时交付明确的失败报告，不生成虚构笔记。失败报告必须写明卡在哪一步及具体原因，并请用户提供可访问的视频链接、字幕/转录文本或有权处理的音视频文件，以便继续。
 
 ### Step 7：清理中间文件并呈现结果
 
@@ -164,7 +164,8 @@ trap - EXIT
 | 情况 | 处理方式 |
 |------|---------|
 | 视频无任何字幕且 Whisper 不可用 | 告知用户无法处理，说明原因 |
-| 视频为私密/会员内容 | 明确报错，提示无法访问非公开视频 |
+| 视频为私密/会员内容 | 明确报错，提示无法访问非公开视频，并请用户提供有权处理的字幕或文件 |
+| 链接无效或视频不可访问 | 说明失败阶段与原因，索取可访问链接、字幕/转录文本或有权处理的音视频文件 |
 | 字幕语言非英文 | 可继续处理；若走 Whisper 兜底，优先使用 `--language auto` 或显式传入语言代码 |
 | 视频超过 3 小时 | 警告处理时间较长，建议只处理用户感兴趣的时间段 |
 

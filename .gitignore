@@ -14,6 +14,9 @@ __pycache__/
 .venv/
 venv/
 
+# Node test dependencies
+node_modules/
+
 # Temp
 /tmp/
 *.tmp
