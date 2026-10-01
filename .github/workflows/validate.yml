@@ -33,7 +33,7 @@ jobs:
         run: python3 -m unittest discover -s tests -v
 
       - name: Set up Node.js for growth map interaction tests
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v7
         with:
           node-version: "22"
 
